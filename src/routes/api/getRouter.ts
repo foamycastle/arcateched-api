@@ -2,6 +2,8 @@ import {Request, Response, NextFunction} from "express";
 import allGameNames from "./get/allGameNames";
 import gameByID from "./get/gameByID";
 import allManufacturers from "./get/allManufacturers";
+import touchTimestamp from "./put/touchTimestamp";
+import {Prisma} from "@prisma/client";
 const express = require("express")
 export const getRouter=express.Router()
 
@@ -39,12 +41,21 @@ getRouter.get("/id/:id",async (req:Request,res:Response,next:NextFunction)=>{
 
     gameByID(req.params.id)
         .then((results)=>{
+            touchTimestamp(results.timestamp_machine_data_timestampTotimestamp.id)
             res.json(results)
         })
         .catch((error)=>{
-            res
-                .status(500)
-                .json(error)
+            if(error.code){
+                switch (error.code){
+                    case 'P2025':
+                        res.status(404)
+                        break;
+                    default:
+                        res.status(500)
+                        break;
+                }
+            }
+            res.json(error)
         })
 })
 

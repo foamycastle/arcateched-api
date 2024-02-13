@@ -16,6 +16,7 @@ exports.getRouter = void 0;
 const allGameNames_1 = __importDefault(require("./get/allGameNames"));
 const gameByID_1 = __importDefault(require("./get/gameByID"));
 const allManufacturers_1 = __importDefault(require("./get/allManufacturers"));
+const touchTimestamp_1 = __importDefault(require("./put/touchTimestamp"));
 const express = require("express");
 exports.getRouter = express.Router();
 exports.getRouter.get('/allGameNames', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -42,12 +43,21 @@ exports.getRouter.get("/id/:id", (req, res, next) => __awaiter(void 0, void 0, v
     }
     (0, gameByID_1.default)(req.params.id)
         .then((results) => {
+        (0, touchTimestamp_1.default)(results.timestamp_machine_data_timestampTotimestamp.id);
         res.json(results);
     })
         .catch((error) => {
-        res
-            .status(500)
-            .json(error);
+        if (error.code) {
+            switch (error.code) {
+                case 'P2025':
+                    res.status(404);
+                    break;
+                default:
+                    res.status(500);
+                    break;
+            }
+        }
+        res.json(error);
     });
 }));
 exports.getRouter.get("/allManufacturers", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
