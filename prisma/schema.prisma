@@ -201,6 +201,8 @@ model timestamp {
   goalExpCom                                                 DateTime?            @db.Timestamp(6)
   replaceAt                                                  DateTime?            @db.Timestamp(6)
   replacedBy                                                 String?              @db.Uuid
+  lastAccess                                                 DateTime?            @db.Timestamp(6)
+  lastAccessBy                                               String?              @db.Uuid
   attachments_attachments_timestampTotimestamp               attachments[]        @relation("attachments_timestampTotimestamp")
   comments_comments_timestampTotimestamp                     comments[]           @relation("comments_timestampTotimestamp")
   contacts_contacts_timestampTotimestamp                     contacts[]           @relation("contacts_timestampTotimestamp")
@@ -213,6 +215,7 @@ model timestamp {
   users_timestamp_completedByTousers                         users?               @relation("timestamp_completedByTousers", fields: [completedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "completedBy_fkey")
   users_timestamp_createdByTousers                           users?               @relation("timestamp_createdByTousers", fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "createdBy_fkey")
   users_timestamp_enteredByTousers                           users?               @relation("timestamp_enteredByTousers", fields: [enteredBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "enteredBy_fkey")
+  users_timestamp_lastAccessByTousers                        users?               @relation("timestamp_lastAccessByTousers", fields: [lastAccessBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "lastAccessBy")
   users_timestamp_modifiedByTousers                          users?               @relation("timestamp_modifiedByTousers", fields: [modifiedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "modifiedBy_fkey")
   users_timestamp_openedByTousers                            users?               @relation("timestamp_openedByTousers", fields: [openedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "openedBy_fkey")
   users_timestamp_removedByTousers                           users?               @relation("timestamp_removedByTousers", fields: [removedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "removedBy_fkey")
@@ -241,26 +244,27 @@ model todo {
 }
 
 model users {
-  id                                     String        @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
-  username                               String        @db.VarChar(16)
-  user_display_name                      String        @db.VarChar(96)
-  user_password                          Bytes
-  isLoggedIn                             Boolean?
-  user_role                              user_role?
-  userContact                            String?       @db.Uuid
-  timestamp                              String?       @db.Uuid
-  attachments                            attachments[]
-  timestamp_timestamp_assignedByTousers  timestamp[]   @relation("timestamp_assignedByTousers")
-  timestamp_timestamp_completedByTousers timestamp[]   @relation("timestamp_completedByTousers")
-  timestamp_timestamp_createdByTousers   timestamp[]   @relation("timestamp_createdByTousers")
-  timestamp_timestamp_enteredByTousers   timestamp[]   @relation("timestamp_enteredByTousers")
-  timestamp_timestamp_modifiedByTousers  timestamp[]   @relation("timestamp_modifiedByTousers")
-  timestamp_timestamp_openedByTousers    timestamp[]   @relation("timestamp_openedByTousers")
-  timestamp_timestamp_removedByTousers   timestamp[]   @relation("timestamp_removedByTousers")
-  timestamp_timestamp_replacedByTousers  timestamp[]   @relation("timestamp_replacedByTousers")
-  timestamp_timestamp_resolvedByTousers  timestamp[]   @relation("timestamp_resolvedByTousers")
-  timestamp_users_timestampTotimestamp   timestamp?    @relation("users_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
-  contacts                               contacts?     @relation(fields: [userContact], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "userContact_fkey")
+  id                                      String        @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  username                                String        @db.VarChar(16)
+  user_display_name                       String        @db.VarChar(96)
+  user_password                           Bytes
+  isLoggedIn                              Boolean?
+  user_role                               user_role?
+  userContact                             String?       @db.Uuid
+  timestamp                               String?       @db.Uuid
+  attachments                             attachments[]
+  timestamp_timestamp_assignedByTousers   timestamp[]   @relation("timestamp_assignedByTousers")
+  timestamp_timestamp_completedByTousers  timestamp[]   @relation("timestamp_completedByTousers")
+  timestamp_timestamp_createdByTousers    timestamp[]   @relation("timestamp_createdByTousers")
+  timestamp_timestamp_enteredByTousers    timestamp[]   @relation("timestamp_enteredByTousers")
+  timestamp_timestamp_lastAccessByTousers timestamp[]   @relation("timestamp_lastAccessByTousers")
+  timestamp_timestamp_modifiedByTousers   timestamp[]   @relation("timestamp_modifiedByTousers")
+  timestamp_timestamp_openedByTousers     timestamp[]   @relation("timestamp_openedByTousers")
+  timestamp_timestamp_removedByTousers    timestamp[]   @relation("timestamp_removedByTousers")
+  timestamp_timestamp_replacedByTousers   timestamp[]   @relation("timestamp_replacedByTousers")
+  timestamp_timestamp_resolvedByTousers   timestamp[]   @relation("timestamp_resolvedByTousers")
+  timestamp_users_timestampTotimestamp    timestamp?    @relation("users_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
+  contacts                                contacts?     @relation(fields: [userContact], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "userContact_fkey")
 }
 
 enum Priority {
