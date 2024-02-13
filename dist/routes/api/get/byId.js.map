@@ -1,0 +1,1 @@
+{"version":3,"file":"byId.js","sourceRoot":"","sources":["../../../../src/routes/api/get/byId.ts"],"names":[],"mappings":";;;;;;;;;;;AACA,wDAAmD;AAEnD,SAA8B,IAAI,CAAC,EAAS;;QACxC,OAAO,2BAAY,CAAC,YAAY,CAAC,SAAS,CAAC;YACvC,KAAK,EAAC;gBACF,EAAE,EAAC,EAAE;aACR;SACJ,CAAC,CAAA;IACN,CAAC;CAAA;AAND,uBAMC"}

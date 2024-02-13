@@ -1,0 +1,1 @@
+{"version":3,"file":"allGameNames.js","sourceRoot":"","sources":["../../../../src/routes/api/get/allGameNames.ts"],"names":[],"mappings":";;;;;;;;;;;AAAA,+DAA0D;AAE1D,SAA8B,YAAY;;QACtC,OAAO,2BAAY,CAAC,YAAY,CAAC,QAAQ,CAAC;YACtC,MAAM,EAAE;gBACJ,EAAE,EAAE,IAAI;gBACR,QAAQ,EAAE,IAAI;aACjB;YACD,OAAO,EAAE;gBACL,QAAQ,EAAE,KAAK;aAClB;SACJ,CAAC,CAAA;IACN,CAAC;CAAA;AAVD,+BAUC"}

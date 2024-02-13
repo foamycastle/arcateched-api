@@ -1,0 +1,571 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model attachments {
+  id                                         String        @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  attLabel                                   String?       @db.VarChar(64)
+  attPath                                    String?
+  relatedMachine                             String?       @db.Uuid
+  relatedKey                                 String?       @db.Uuid
+  relatedContact                             String?       @db.Uuid
+  relatedUser                                String?       @db.Uuid
+  attType                                    attType?
+  timestamp                                  String?       @db.Uuid
+  contacts                                   contacts?     @relation(fields: [relatedContact], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "contactId_fkey")
+  keys                                       keys?         @relation(fields: [relatedKey], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "keyId_fkey")
+  machine_data                               machine_data? @relation(fields: [relatedMachine], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "machineId_fkey")
+  timestamp_attachments_timestampTotimestamp timestamp?    @relation("attachments_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
+  users                                      users?        @relation(fields: [relatedUser], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "userId_fkey")
+}
+
+model comments {
+  id                                      String        @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  relatedObject                           String?       @db.Uuid
+  timestamp                               String?       @db.Uuid
+  comments                                String?
+  user_role                               user_role?
+  contacts                                contacts?     @relation(fields: [relatedObject], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "contact_fkey")
+  issues                                  issues?       @relation(fields: [relatedObject], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "issues_fkey")
+  keys                                    keys?         @relation(fields: [relatedObject], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "keys_fkey")
+  machine_data                            machine_data? @relation(fields: [relatedObject], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "machine_fkey")
+  timestamp_comments_timestampTotimestamp timestamp?    @relation("comments_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestamp")
+  todo                                    todo?         @relation(fields: [relatedObject], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "todo_fkey")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model contacts {
+  id                                      String               @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  ctName                                  String               @db.VarChar(64)
+  ctType                                  contactType[]
+  ctSupplies                              String[]             @db.VarChar(64)
+  timestamp                               String?              @db.Uuid
+  attachments                             attachments[]
+  comments                                comments[]
+  timestamp_contacts_timestampTotimestamp timestamp?           @relation("contacts_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
+  contacts_addresses                      contacts_addresses[]
+  contacts_internet                       contacts_internet[]
+  contacts_phone                          contacts_phone[]
+  machine_data                            machine_data[]
+  users                                   users[]
+}
+
+model contacts_addresses {
+  streetNumber                                      String?    @db.VarChar(10)
+  streetAddress1                                    String?    @db.VarChar(128)
+  streetAddress2                                    String?    @db.VarChar(128)
+  streetUnit                                        String?    @db.VarChar(10)
+  postalcode                                        String?    @db.VarChar(10)
+  territory                                         state?
+  country                                           countries?
+  label                                             String?    @db.VarChar(64)
+  id                                                String     @id(map: "contactsAddress_pkey") @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  contactId                                         String?    @db.Uuid
+  city                                              String?    @db.VarChar(64)
+  name                                              String?    @db.VarChar(48)
+  timestamp                                         String?    @db.Uuid
+  contacts                                          contacts?  @relation(fields: [contactId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "contactId_fkey")
+  timestamp_contacts_addresses_timestampTotimestamp timestamp? @relation("contacts_addresses_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
+}
+
+model contacts_internet {
+  website                                          String[]   @db.VarChar(255)
+  twitter                                          String?    @db.VarChar(32)
+  facebook                                         String?    @db.VarChar(128)
+  youtube                                          String?    @db.VarChar(32)
+  insta                                            String?    @db.VarChar(32)
+  id                                               String     @id(map: "contactsInternet_pkey") @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  email                                            String[]   @db.VarChar(128)
+  contactId                                        String?    @db.Uuid
+  timestamp                                        String?    @db.Uuid
+  contacts                                         contacts?  @relation(fields: [contactId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "contactId_fkey")
+  timestamp_contacts_internet_timestampTotimestamp timestamp? @relation("contacts_internet_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
+}
+
+model contacts_phone {
+  countryCode                                   Int?
+  areaCode                                      Int?
+  regionCode                                    Int?
+  extCode1                                      Int?
+  extCode2                                      Int?
+  lineExtension                                 Int?
+  label                                         String?    @db.VarChar(32)
+  id                                            String     @id(map: "contactsPhone_pkey") @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  contactId                                     String?    @db.Uuid
+  name                                          String?    @db.VarChar(48)
+  timestamp                                     String?    @db.Uuid
+  contacts                                      contacts?  @relation(fields: [contactId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "contactId_fkey")
+  timestamp_contacts_phone_timestampTotimestamp timestamp? @relation("contacts_phone_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
+}
+
+model issues {
+  id                                    String        @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  machine                               String?       @db.Uuid
+  issueLabel                            String?       @db.VarChar(64)
+  issueDescription                      String?
+  issueDiagnosis                        String?
+  issueExpectedAction                   String?
+  issuePostResult                       String?
+  timestamp                             String?       @db.Uuid
+  comments                              comments[]
+  machine_data                          machine_data? @relation(fields: [machine], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "machine_fkey")
+  timestamp_issues_timestampTotimestamp timestamp?    @relation("issues_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
+  todo                                  todo[]
+}
+
+model issues_problem_tags {
+  id       String  @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  tagLabel String? @db.VarChar(32)
+  tagColor BigInt?
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model keys {
+  id                                         String         @id(map: "pkey_KeysID") @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  keyID                                      String         @db.VarChar(32)
+  tagLabel                                   String?        @db.VarChar(32)
+  keyForm                                    Int?           @db.SmallInt
+  keyType                                    Int?           @db.SmallInt
+  idMarks                                    String[]       @db.VarChar
+  attachments                                attachments[]
+  comments                                   comments[]
+  machine_data_machine_data_cabinetKeyTokeys machine_data[] @relation("machine_data_cabinetKeyTokeys")
+  machine_data_machine_data_serviceKeyTokeys machine_data[] @relation("machine_data_serviceKeyTokeys")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model machine_data {
+  id                                          String         @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  gameName                                    String         @db.VarChar(64)
+  modelNumber                                 String?        @db.VarChar(32)
+  serialNumber                                String         @unique(map: "gameSerial__u") @db.VarChar(32)
+  dateOfMfg                                   DateTime?      @db.Date
+  dateEnter                                   DateTime?      @db.Date
+  dateExit                                    DateTime?      @db.Date
+  cabinetKey                                  String?        @db.Uuid
+  serviceKey                                  String?        @db.Uuid
+  playerCount                                 Int?           @db.SmallInt
+  gameType                                    gameType[]
+  gameZone                                    String?        @db.Uuid
+  occupied                                    Float?
+  timestamp                                   String?        @db.Uuid
+  mfgUUID                                     String?        @db.Uuid
+  attachments                                 attachments[]
+  comments                                    comments[]
+  issues                                      issues[]
+  keys_machine_data_cabinetKeyTokeys          keys?          @relation("machine_data_cabinetKeyTokeys", fields: [cabinetKey], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cabinetKey_fkey")
+  machine_zones                               machine_zones? @relation(fields: [gameZone], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "gameZone_fkey")
+  contacts                                    contacts?      @relation(fields: [mfgUUID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "manufacturerID")
+  keys_machine_data_serviceKeyTokeys          keys?          @relation("machine_data_serviceKeyTokeys", fields: [serviceKey], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "serviceKey_fkey")
+  timestamp_machine_data_timestampTotimestamp timestamp?     @relation("machine_data_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestamp")
+  todo                                        todo[]
+
+  @@index([mfgUUID], map: "fki_manufacturerID")
+  @@index([timestamp], map: "fki_timestamp")
+}
+
+model machine_zones {
+  id            String         @id(map: "gameZones_pkey") @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  zoneLabel     String         @db.VarChar(32)
+  zoneDesc      String?        @db.VarChar(255)
+  zoneFloorArea Float?
+  machine_data  machine_data[]
+}
+
+model timestamp {
+  id                                                         String               @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  createdAt                                                  DateTime?            @db.Timestamp(6)
+  createdBy                                                  String?              @db.Uuid
+  modifiedAt                                                 DateTime?            @db.Timestamp(6)
+  modifiedBy                                                 String?              @db.Uuid
+  openedAt                                                   DateTime?            @db.Timestamp(6)
+  openedBy                                                   String?              @db.Uuid
+  resolvedAt                                                 DateTime?            @db.Timestamp(6)
+  resolvedBy                                                 String?              @db.Uuid
+  assignedAt                                                 DateTime?            @db.Timestamp(6)
+  assignedBy                                                 String?              @db.Uuid
+  completedAt                                                DateTime?            @db.Timestamp(6)
+  completedBy                                                String?              @db.Uuid
+  dateMfg                                                    DateTime?            @db.Date
+  removedAt                                                  DateTime?            @db.Timestamp(6)
+  removedBy                                                  String?              @db.Uuid
+  enteredAt                                                  DateTime?            @db.Timestamp(6)
+  enteredBy                                                  String?              @db.Uuid
+  lastLogin                                                  DateTime?            @db.Timestamp(6)
+  goalBegin                                                  DateTime?            @db.Timestamp(6)
+  goalExpCom                                                 DateTime?            @db.Timestamp(6)
+  replaceAt                                                  DateTime?            @db.Timestamp(6)
+  replacedBy                                                 String?              @db.Uuid
+  attachments_attachments_timestampTotimestamp               attachments[]        @relation("attachments_timestampTotimestamp")
+  comments_comments_timestampTotimestamp                     comments[]           @relation("comments_timestampTotimestamp")
+  contacts_contacts_timestampTotimestamp                     contacts[]           @relation("contacts_timestampTotimestamp")
+  contacts_addresses_contacts_addresses_timestampTotimestamp contacts_addresses[] @relation("contacts_addresses_timestampTotimestamp")
+  contacts_internet_contacts_internet_timestampTotimestamp   contacts_internet[]  @relation("contacts_internet_timestampTotimestamp")
+  contacts_phone_contacts_phone_timestampTotimestamp         contacts_phone[]     @relation("contacts_phone_timestampTotimestamp")
+  issues_issues_timestampTotimestamp                         issues[]             @relation("issues_timestampTotimestamp")
+  machine_data_machine_data_timestampTotimestamp             machine_data[]       @relation("machine_data_timestampTotimestamp")
+  users_timestamp_assignedByTousers                          users?               @relation("timestamp_assignedByTousers", fields: [assignedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "assignedBy_fkey")
+  users_timestamp_completedByTousers                         users?               @relation("timestamp_completedByTousers", fields: [completedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "completedBy_fkey")
+  users_timestamp_createdByTousers                           users?               @relation("timestamp_createdByTousers", fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "createdBy_fkey")
+  users_timestamp_enteredByTousers                           users?               @relation("timestamp_enteredByTousers", fields: [enteredBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "enteredBy_fkey")
+  users_timestamp_modifiedByTousers                          users?               @relation("timestamp_modifiedByTousers", fields: [modifiedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "modifiedBy_fkey")
+  users_timestamp_openedByTousers                            users?               @relation("timestamp_openedByTousers", fields: [openedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "openedBy_fkey")
+  users_timestamp_removedByTousers                           users?               @relation("timestamp_removedByTousers", fields: [removedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "removedBy_fkey")
+  users_timestamp_replacedByTousers                          users?               @relation("timestamp_replacedByTousers", fields: [replacedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "replacedBy_fkey")
+  users_timestamp_resolvedByTousers                          users?               @relation("timestamp_resolvedByTousers", fields: [resolvedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "resolvedBy_fkey")
+  todo_todo_timestampTotimestamp                             todo[]               @relation("todo_timestampTotimestamp")
+  users_users_timestampTotimestamp                           users[]              @relation("users_timestampTotimestamp")
+}
+
+model todo {
+  id                                  String        @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  isCompleted                         Boolean       @default(false)
+  userLevel                           user_role?
+  assignedTo                          String?       @db.Uuid
+  todoLabel                           String?       @db.VarChar(64)
+  todoDescription                     String?
+  priority                            Priority?
+  finalDispos                         String?
+  relatedMachine                      String?       @db.Uuid
+  relatedIssue                        String?       @db.Uuid
+  timestamp                           String?       @db.Uuid
+  comments                            comments[]
+  issues                              issues?       @relation(fields: [relatedIssue], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "issueId_fkey")
+  machine_data                        machine_data? @relation(fields: [relatedMachine], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "machineId_fkey")
+  timestamp_todo_timestampTotimestamp timestamp?    @relation("todo_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
+}
+
+model users {
+  id                                     String        @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  username                               String        @db.VarChar(16)
+  user_display_name                      String        @db.VarChar(96)
+  user_password                          Bytes
+  isLoggedIn                             Boolean?
+  user_role                              user_role?
+  userContact                            String?       @db.Uuid
+  timestamp                              String?       @db.Uuid
+  attachments                            attachments[]
+  timestamp_timestamp_assignedByTousers  timestamp[]   @relation("timestamp_assignedByTousers")
+  timestamp_timestamp_completedByTousers timestamp[]   @relation("timestamp_completedByTousers")
+  timestamp_timestamp_createdByTousers   timestamp[]   @relation("timestamp_createdByTousers")
+  timestamp_timestamp_enteredByTousers   timestamp[]   @relation("timestamp_enteredByTousers")
+  timestamp_timestamp_modifiedByTousers  timestamp[]   @relation("timestamp_modifiedByTousers")
+  timestamp_timestamp_openedByTousers    timestamp[]   @relation("timestamp_openedByTousers")
+  timestamp_timestamp_removedByTousers   timestamp[]   @relation("timestamp_removedByTousers")
+  timestamp_timestamp_replacedByTousers  timestamp[]   @relation("timestamp_replacedByTousers")
+  timestamp_timestamp_resolvedByTousers  timestamp[]   @relation("timestamp_resolvedByTousers")
+  timestamp_users_timestampTotimestamp   timestamp?    @relation("users_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
+  contacts                               contacts?     @relation(fields: [userContact], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "userContact_fkey")
+}
+
+enum Priority {
+  Lowest
+  Low
+  Moderate
+  ASAP
+  Critical
+}
+
+enum StatusTags {
+  Pending
+  Open
+  Resolved
+  Deferred
+}
+
+enum attType {
+  Machine_Image    @map("Machine Image")
+  Machine_Manual   @map("Machine Manual")
+  Key_Front        @map("Key Front")
+  Key_Back         @map("Key Back")
+  Contact_Relation @map("Contact Relation")
+  User_Relation    @map("User Relation")
+}
+
+enum contactType {
+  Manufacturer
+  Vendor
+  Tech_Support   @map("Tech Support")
+  Sales_Rep      @map("Sales Rep")
+  Distributor
+  Contractor
+  Team_Member    @map("Team Member")
+  Administrator
+  Human_Resource @map("Human Resource")
+}
+
+enum countries {
+  Afghanistan
+  Albania
+  Algeria
+  Andorra
+  Angola
+  Antigua___Deps                 @map("Antigua & Deps")
+  Argentina
+  Armenia
+  Australia
+  Austria
+  Azerbaijan
+  Bahamas
+  Bahrain
+  Bangladesh
+  Barbados
+  Belarus
+  Belgium
+  Belize
+  Benin
+  Bermuda
+  Bhutan
+  Bolivia
+  Bosnia_Herzegovina             @map("Bosnia Herzegovina")
+  Botswana
+  Brazil
+  Brunei
+  Bulgaria
+  Burkina
+  Burundi
+  Cambodia
+  Cameroon
+  Canada
+  Cape_Verde                     @map("Cape Verde")
+  Central_African_Rep            @map("Central African Rep")
+  Chad
+  Chile
+  China
+  Colombia
+  Comoros
+  Congo
+  Congo__Democratic_Rep_         @map("Congo (Democratic Rep)")
+  Costa_Rica                     @map("Costa Rica")
+  Croatia
+  Cuba
+  Cyprus
+  Czech_Republic                 @map("Czech Republic")
+  Denmark
+  Djibouti
+  Dominica
+  Dominican_Republic             @map("Dominican Republic")
+  East_Timor                     @map("East Timor")
+  Ecuador
+  Egypt
+  El_Salvador                    @map("El Salvador")
+  Equatorial_Guinea              @map("Equatorial Guinea")
+  Eritrea
+  Estonia
+  Eswatini
+  Ethiopia
+  Fiji
+  Finland
+  France
+  Gabon
+  Gambia
+  Georgia
+  Germany
+  Ghana
+  Greece
+  Grenada
+  Guatemala
+  Guinea
+  Guinea_Bissau                  @map("Guinea-Bissau")
+  Guyana
+  Haiti
+  Honduras
+  Hungary
+  Iceland
+  India
+  Indonesia
+  Iran
+  Iraq
+  Ireland__Republic_             @map("Ireland (Republic)")
+  Israel
+  Italy
+  Ivory_Coast                    @map("Ivory Coast")
+  Jamaica
+  Japan
+  Jordan
+  Kazakhstan
+  Kenya
+  Kiribati
+  Korea_North                    @map("Korea North")
+  Korea_South                    @map("Korea South")
+  Kosovo
+  Kuwait
+  Kyrgyzstan
+  Laos
+  Latvia
+  Lebanon
+  Lesotho
+  Liberia
+  Libya
+  Liechtenstein
+  Lithuania
+  Luxembourg
+  Macedonia
+  Madagascar
+  Malawi
+  Malaysia
+  Maldives
+  Mali
+  Malta
+  Marshall_Islands               @map("Marshall Islands")
+  Mauritania
+  Mauritius
+  Mexico
+  Micronesia
+  Moldova
+  Monaco
+  Mongolia
+  Montenegro
+  Morocco
+  Mozambique
+  Myanmar
+  Namibia
+  Nauru
+  Nepal
+  Netherlands
+  New_Zealand                    @map("New Zealand")
+  Nicaragua
+  Niger
+  Nigeria
+  Norway
+  Oman
+  Pakistan
+  Palau
+  Palestine
+  Panama
+  Papua_New_Guinea               @map("Papua New Guinea")
+  Paraguay
+  Peru
+  Philippines
+  Poland
+  Portugal
+  Qatar
+  Romania
+  Russian_Federation             @map("Russian Federation")
+  Rwanda
+  St_Kitts___Nevis               @map("St Kitts & Nevis")
+  St_Lucia                       @map("St Lucia")
+  Saint_Vincent___the_Grenadines @map("Saint Vincent & the Grenadines")
+  Samoa
+  San_Marino                     @map("San Marino")
+  Sao_Tome___Principe            @map("Sao Tome & Principe")
+  Saudi_Arabia                   @map("Saudi Arabia")
+  Senegal
+  Serbia
+  Seychelles
+  Sierra_Leone                   @map("Sierra Leone")
+  Singapore
+  Slovakia
+  Slovenia
+  Solomon_Islands                @map("Solomon Islands")
+  Somalia
+  South_Africa                   @map("South Africa")
+  South_Sudan                    @map("South Sudan")
+  Spain
+  Sri_Lanka                      @map("Sri Lanka")
+  Sudan
+  Suriname
+  Sweden
+  Switzerland
+  Syria
+  Taiwan
+  Tajikistan
+  Tanzania
+  Thailand
+  Togo
+  Tonga
+  Trinidad___Tobago              @map("Trinidad & Tobago")
+  Tunisia
+  Turkey
+  Turkmenistan
+  Tuvalu
+  Uganda
+  Ukraine
+  United_Arab_Emirates           @map("United Arab Emirates")
+  United_Kingdom                 @map("United Kingdom")
+  United_States                  @map("United States")
+  Uruguay
+  Uzbekistan
+  Vanuatu
+  Vatican_City                   @map("Vatican City")
+  Venezuela
+  Vietnam
+  Yemen
+  Zambia
+  Zimbabwe
+}
+
+enum gameType {
+  Video
+  Redemption
+  Merch
+  Crane
+  Ticket
+  Pusher
+  Skill
+}
+
+enum state {
+  DE
+  PA
+  NJ
+  GA
+  CT
+  MA
+  MD
+  SC
+  NH
+  VA
+  NY
+  NC
+  RI
+  VT
+  KY
+  TN
+  OH
+  LA
+  IN
+  MS
+  IL
+  AL
+  ME
+  MO
+  AR
+  MI
+  FL
+  TX
+  IA
+  WI
+  CA
+  MN
+  OR
+  KS
+  WV
+  NV
+  NB
+  CO
+  ND
+  SD
+  MT
+  WA
+  ID
+  WY
+  UT
+  OK
+  NM
+  AZ
+  AK
+  HI
+}
+
+enum user_role {
+  ADMIN
+  SENIOR
+  JUNIOR
+  ATTENDANT
+}
