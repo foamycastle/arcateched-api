@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postRouter = void 0;
-const createMachine_Data_1 = __importDefault(require("./post/createMachine_Data"));
+const createMachine_Data_1 = __importDefault(require("./post/machine_data/createMachine_Data"));
 const validateCreateMachine_Data_1 = __importDefault(require("../../validation/post/validateCreateMachine_Data"));
 const checkForExistingGame_1 = __importDefault(require("../../validation/checkForExistingGame"));
 const express = require("express");

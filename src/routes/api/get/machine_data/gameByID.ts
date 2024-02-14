@@ -1,4 +1,4 @@
-import {prismaClient} from "../../../prisma/prismaClient";
+import {prismaClient} from "../../../../prisma/prismaClient";
 
 export default async function gameByID(id:string){
     return prismaClient.machine_data.findFirstOrThrow({

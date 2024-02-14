@@ -14,8 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.putRouter = void 0;
 const validateUpdateMachine_Data_1 = __importDefault(require("../../validation/put/validateUpdateMachine_Data"));
-const modifyMachine_Data_1 = __importDefault(require("./put/modifyMachine_Data"));
-const modifyManyMachine_Data_1 = __importDefault(require("./put/modifyManyMachine_Data"));
+const modifyMachine_Data_1 = __importDefault(require("./put/machine_data/modifyMachine_Data"));
+const modifyManyMachine_Data_1 = __importDefault(require("./put/machine_data/modifyManyMachine_Data"));
 const express = require("express");
 exports.putRouter = express.Router();
 exports.putRouter.use(/\/game$/g, validateUpdateMachine_Data_1.default);

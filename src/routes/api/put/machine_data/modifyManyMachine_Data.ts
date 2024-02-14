@@ -1,4 +1,4 @@
-import {prismaClient} from "../../../prisma/prismaClient";
+import {prismaClient} from "../../../../prisma/prismaClient";
 import {Prisma} from "@prisma/client";
 import {Request} from "express";
 import Joi from "joi";

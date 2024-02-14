@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from "express";
-import createNewGame from "./post/createMachine_Data";
+import createNewGame from "./post/machine_data/createMachine_Data";
 import validateCreateMachine_Data from "../../validation/post/validateCreateMachine_Data";
 import checkForExistingGame from "../../validation/checkForExistingGame";
 const express = require("express")

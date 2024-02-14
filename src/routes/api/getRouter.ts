@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from "express";
-import allGameNames from "./get/allGameNames";
-import gameByID from "./get/gameByID";
-import getContactType from "./get/getContactType";
+import allGameNames from "./get/machine_data/allGameNames";
+import gameByID from "./get/machine_data/gameByID";
+import getContactType from "./get/contacts/getContactType";
 import touchTimestamp from "./put/touchTimestamp";
 import Prisma from "@prisma/client";
 import validateType from "../../validation/get/validateContactType";
