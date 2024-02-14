@@ -52,6 +52,18 @@ getRouter.get("/machine_data/:id",async (req:Request,res:Response,next:NextFunct
             res.json(error)
         })
 })
+getRouter.use('/machine_data/manyMachinesById',validateUpdateManyMachine_Data)
+getRouter.get('/machine_data/manyMachinesById',async (req:Request,res:Response)=>{
+    manyMachinesById(req.body)
+        .then(result=>res.json(result))
+        .catch((error)=>{
+            res.json({
+                error:{
+                    message:error.message
+                }
+            })
+        })
+})
 
 getRouter.param('opState',validateOpState)
 getRouter.get('/machine_data/byOpState/:opState',async (req:Request,res:Response)=>{
