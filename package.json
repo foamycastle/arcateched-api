@@ -1,6 +1,7 @@
 {
+  "main": "dist/index.js",
   "scripts": {
-    "start": "./dist/index.js",
+    "start": "nodemon",
     "prisma-rebuild": "npx prisma db pull --force && npx prisma generate"
   },
   "dependencies": {
