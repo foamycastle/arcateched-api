@@ -1,12 +1,10 @@
 import {Request, Response, NextFunction} from "express";
 import createNewGame from "./post/machine_data/createMachine_Data";
 import validateCreateMachine_Data from "../validation/post/validateCreateMachine_Data";
-import checkForExistingGame from "../validation/checkForExistingGame";
 const express = require("express")
 export const postRouter=express.Router()
 
 postRouter.use('/createNewGame',validateCreateMachine_Data)
-postRouter.use('/createNewGame',checkForExistingGame)
 
 postRouter.post('/createNewGame',async (req:Request,res:Response)=>{
     createNewGame(req.body)

@@ -49,7 +49,11 @@ getRouter.get("/machine_data/:id",async (req:Request,res:Response,next:NextFunct
                         break;
                 }
             }
-            res.json(error)
+            res.json({
+                error:{
+                    message:error.message
+                }
+            })
         })
 })
 getRouter.use('/machine_data/manyMachinesById',validateUpdateManyMachine_Data)
