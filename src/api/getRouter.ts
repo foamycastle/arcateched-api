@@ -4,9 +4,9 @@ import gameByID from "./get/machine_data/gameByID";
 import getContactType from "./get/contacts/byType/getContactType";
 import touchTimestamp from "./put/touchTimestamp";
 import Prisma from "@prisma/client";
-import validateType from "../../validation/get/validateContactType";
-import validateUUID from "../../validation/get/validateUUID";
-import validateOpState from "../../validation/get/validateOpState";
+import validateType from "../validation/get/validateContactType";
+import validateUUID from "../validation/get/validateUUID";
+import validateOpState from "../validation/get/validateOpState";
 import byOpState from "./get/machine_data/byOpState/byOpState";
 const express = require("express")
 export const getRouter=express.Router()
