@@ -6,6 +6,8 @@ import touchTimestamp from "./put/touchTimestamp";
 import Prisma from "@prisma/client";
 import validateType from "../../validation/get/validateContactType";
 import validateUUID from "../../validation/get/validateUUID";
+import validateOpState from "../../validation/get/validateOpState";
+import byOpState from "./get/machine_data/byOpState/byOpState";
 const express = require("express")
 export const getRouter=express.Router()
 
@@ -49,6 +51,12 @@ getRouter.get("/machine_data/:id",async (req:Request,res:Response,next:NextFunct
         })
 })
 
+getRouter.param('opState',validateOpState)
+getRouter.get('/machine_data/byOpState/:opState',async (req:Request,res:Response)=>{
+    byOpState(<Prisma.opState>req.params.opState)
+        .then(results=>res.json(results))
+        .catch(error=>console.log(error))
+})
 /**
  * Retrieve A
  */
@@ -59,4 +67,5 @@ getRouter.get("/contacts/byType/:contactType",async (req:Request,res:Response)=>
         .then(results => res.json(results))
         .catch(error=>res.status(400).json({error:{message: error.message}}))
 })
+
 console.log('getRouter')

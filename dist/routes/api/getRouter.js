@@ -19,6 +19,8 @@ const getContactType_1 = __importDefault(require("./get/contacts/byType/getConta
 const touchTimestamp_1 = __importDefault(require("./put/touchTimestamp"));
 const validateContactType_1 = __importDefault(require("../../validation/get/validateContactType"));
 const validateUUID_1 = __importDefault(require("../../validation/get/validateUUID"));
+const validateOpState_1 = __importDefault(require("../../validation/get/validateOpState"));
+const byOpState_1 = __importDefault(require("./get/machine_data/byOpState/byOpState"));
 const express = require("express");
 exports.getRouter = express.Router();
 exports.getRouter.get('/machine_data/names', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -52,6 +54,12 @@ exports.getRouter.get("/machine_data/:id", (req, res, next) => __awaiter(void 0,
         }
         res.json(error);
     });
+}));
+exports.getRouter.param('opState', validateOpState_1.default);
+exports.getRouter.get('/machine_data/byOpState/:opState', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    (0, byOpState_1.default)(req.params.opState)
+        .then(results => res.json(results))
+        .catch(error => console.log(error));
 }));
 exports.getRouter.param('contactType', validateContactType_1.default);
 exports.getRouter.get("/contacts/byType/:contactType", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
