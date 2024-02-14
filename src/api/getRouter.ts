@@ -72,7 +72,7 @@ getRouter.get('/machine_data/byOpState/:opState',async (req:Request,res:Response
         .catch(error=>console.log(error))
 })
 /**
- * Retrieve A
+ * Retrieve A List of machines whose contact relation contains a certain type
  */
 getRouter.param('contactType',validateType)
 getRouter.get("/contacts/byType/:contactType",async (req:Request,res:Response)=>{
