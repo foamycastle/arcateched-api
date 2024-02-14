@@ -1,5 +1,5 @@
 import Express from 'express'
-import {apiRouter} from "./routes/apiRouter";
+import {apiRouter} from "./api/apiRouter";
 export const express      = Express()
 
 const bodyParser        = require('body-parser')
