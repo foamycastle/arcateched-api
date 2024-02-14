@@ -27,7 +27,7 @@ getRouter.get('/machine_data/names',async (req:Request,res:Response,next:NextFun
 /**
  * Retrieve a single game record by its ID
  */
-getRouter.use('/machine_data/:id',validateUUID)
+getRouter.param('/machine_data/:id',validateUUID)
 getRouter.get("/machine_data/:id",async (req:Request,res:Response,next:NextFunction)=>{
     gameByID(req.params.id)
         .then((results)=>{

@@ -32,7 +32,7 @@ exports.getRouter.get('/machine_data/names', (req, res, next) => __awaiter(void 
             .json(error);
     });
 }));
-exports.getRouter.use('/machine_data/:id', validateUUID_1.default);
+exports.getRouter.param('/machine_data/:id', validateUUID_1.default);
 exports.getRouter.get("/machine_data/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     (0, gameByID_1.default)(req.params.id)
         .then((results) => {
