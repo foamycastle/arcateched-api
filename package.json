@@ -2,6 +2,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "nodemon",
+    "prune": "npm prune",
     "prisma-pull-force-generate": "npx prisma db pull --force && npx prisma generate",
     "prisma-pull-generate": "npx prisma db pull && npx prisma generate",
     "prisma-generate": "npx prisma generate",

@@ -1,6 +1,6 @@
-import {getRouter} from "./api/getRouter";
-import {postRouter} from "./api/postRouter";
-import {putRouter} from "./api/putRouter";
+import {getRouter} from "./getRouter";
+import {postRouter} from "./postRouter";
+import {putRouter} from "./putRouter";
 import {NextFunction, Request, Response} from "express";
 const express = require('express')
 export const apiRouter = express.Router()

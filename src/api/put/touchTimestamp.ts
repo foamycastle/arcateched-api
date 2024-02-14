@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import {prismaClient} from "../../../prisma/prismaClient";
+import {prismaClient} from "../../prisma/prismaClient";
 
 export default async function (id:string|null, user?:string){
     if (!id) return null;

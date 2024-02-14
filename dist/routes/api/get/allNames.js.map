@@ -1,1 +1,0 @@
-{"version":3,"file":"allNames.js","sourceRoot":"","sources":["../../../../src/routes/api/get/allNames.ts"],"names":[],"mappings":";;;;;;;;;;;AAAA,wDAAmD;AAGnD,SAA8B,QAAQ;;QAClC,OAAO,2BAAY,CAAC,YAAY,CAAC,QAAQ,CAAC;YACtC,MAAM,EAAC;gBACH,EAAE,EAAC,IAAI;gBACP,QAAQ,EAAC,IAAI;aAChB;YACD,OAAO,EAAC;gBACJ,QAAQ,EAAC,KAAK;aACjB;SACJ,CAAC,CAAA;IACN,CAAC;CAAA;AAVD,2BAUC"}
