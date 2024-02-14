@@ -155,7 +155,7 @@ model machine_data {
   occupied                                    Float?
   timestamp                                   String?        @db.Uuid
   mfgUUID                                     String?        @db.Uuid
-  opStatus                                    StatusTags?
+  opState                                     opState?
   attachments                                 attachments[]
   comments                                    comments[]
   issues                                      issues[]
@@ -513,6 +513,14 @@ enum gameType {
   Ticket
   Pusher
   Skill
+}
+
+enum opState {
+  Up
+  Down
+  Repair
+  Off_Floor @map("Off Floor")
+  Sold
 }
 
 enum state {
