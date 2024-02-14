@@ -39,6 +39,32 @@ components:
           $ref: "#/components/schemas/id"
         gameName:
           $ref: "#/components/schemas/gameName"
+    keys_machine_data_cabinetKeyTokeys:
+      type: object
+      description: A cabinetKey object
+      properties:
+        id:
+          $ref: "#/components/schemas/id"
+        keyID:
+          type: string
+          description: A string containing an identification of the key
+        tagLabel:
+          type: string
+          description: A string containing the label of the key
+        keyForm:
+          type: number
+          description: An object containing the type of key
+        keyType:
+          type: number
+          description: An object containing the type of key
+        idMarks:
+          type: array
+          description: A list of strings containing identifying marks on the key
+    keys_machine_data_serviceKeyTokeys:
+      $ref: "#/components/schemas/keys_machine_data_cabinetKeyTokeys"
+
+
+
     gameById:
       type: object
       properties:
@@ -98,7 +124,7 @@ components:
         mfgUUID:
           type: string
           format: UUID
-          description:  An indentifier linked to an object in the contacts table, used to identify the manufacturer of the machine
+          description:  An identifier linked to an object in the contacts table, used to identify the manufacturer of the machine
         attachments:
           type: array
           description: An array of linked attachment objects in the attachments table
