@@ -15,11 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRouter = void 0;
 const allGameNames_1 = __importDefault(require("./get/allGameNames"));
 const gameByID_1 = __importDefault(require("./get/gameByID"));
-const allManufacturers_1 = __importDefault(require("./get/allManufacturers"));
+const getContactType_1 = __importDefault(require("./get/getContactType"));
 const touchTimestamp_1 = __importDefault(require("./put/touchTimestamp"));
+const validateContactType_1 = __importDefault(require("../../validation/get/validateContactType"));
+const validateUUID_1 = __importDefault(require("../../validation/get/validateUUID"));
 const express = require("express");
 exports.getRouter = express.Router();
-exports.getRouter.get('/allGameNames', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getRouter.get('/machine_data/names', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     (0, allGameNames_1.default)()
         .then((results) => {
         res.json(results);
@@ -30,17 +32,8 @@ exports.getRouter.get('/allGameNames', (req, res, next) => __awaiter(void 0, voi
             .json(error);
     });
 }));
-exports.getRouter.get("/id/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const validUUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/ig.test(req.params.id);
-    if (!validUUID) {
-        res
-            .status(400)
-            .json({
-            error: {
-                message: "Malformed game identifier in request"
-            }
-        });
-    }
+exports.getRouter.use('/machine_data/:id', validateUUID_1.default);
+exports.getRouter.get("/machine_data/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     (0, gameByID_1.default)(req.params.id)
         .then((results) => {
         (0, touchTimestamp_1.default)(results.timestamp_machine_data_timestampTotimestamp.id);
@@ -60,8 +53,9 @@ exports.getRouter.get("/id/:id", (req, res, next) => __awaiter(void 0, void 0, v
         res.json(error);
     });
 }));
-exports.getRouter.get("/allManufacturers", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    (0, allManufacturers_1.default)()
+exports.getRouter.param('contactType', validateContactType_1.default);
+exports.getRouter.get("/contacts/byType/:contactType", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    (0, getContactType_1.default)(req.params.contactType)
         .then(results => res.json(results))
         .catch(error => res.status(400).json({ error: { message: error.message } }));
 }));

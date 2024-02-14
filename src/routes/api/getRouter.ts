@@ -1,16 +1,18 @@
 import {Request, Response, NextFunction} from "express";
 import allGameNames from "./get/allGameNames";
 import gameByID from "./get/gameByID";
-import allManufacturers from "./get/allManufacturers";
+import getContactType from "./get/getContactType";
 import touchTimestamp from "./put/touchTimestamp";
-import {Prisma} from "@prisma/client";
+import Prisma from "@prisma/client";
+import validateType from "../../validation/get/validateContactType";
+import validateUUID from "../../validation/get/validateUUID";
 const express = require("express")
 export const getRouter=express.Router()
 
 /**
  * Retrieve all game names
  */
-getRouter.get('/allGameNames',async (req:Request,res:Response,next:NextFunction)=>{
+getRouter.get('/machine_data/names',async (req:Request,res:Response,next:NextFunction)=>{
     allGameNames()
         .then((results)=>{
             res.json(results)
@@ -25,20 +27,8 @@ getRouter.get('/allGameNames',async (req:Request,res:Response,next:NextFunction)
 /**
  * Retrieve a single game record by its ID
  */
-getRouter.get("/id/:id",async (req:Request,res:Response,next:NextFunction)=>{
-    //validate UUID
-    const validUUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/ig.test(req.params.id)
-
-    if(!validUUID){
-        res
-            .status(400)
-            .json({
-                error:{
-                    message:"Malformed game identifier in request"
-                }
-            })
-    }
-
+getRouter.use('/machine_data/:id',validateUUID)
+getRouter.get("/machine_data/:id",async (req:Request,res:Response,next:NextFunction)=>{
     gameByID(req.params.id)
         .then((results)=>{
             touchTimestamp(results.timestamp_machine_data_timestampTotimestamp.id)
@@ -59,8 +49,13 @@ getRouter.get("/id/:id",async (req:Request,res:Response,next:NextFunction)=>{
         })
 })
 
-getRouter.get("/allManufacturers",async (req:Request,res:Response)=>{
-    allManufacturers()
+/**
+ * Retrieve A
+ */
+getRouter.param('contactType',validateType)
+getRouter.get("/contacts/byType/:contactType",async (req:Request,res:Response)=>{
+
+    getContactType(<Prisma.contactType>req.params.contactType)
         .then(results => res.json(results))
         .catch(error=>res.status(400).json({error:{message: error.message}}))
 })
