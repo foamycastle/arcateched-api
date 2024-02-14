@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from "express";
-import allGameNames from "./get/machine_data/allGameNames";
-import gameByID from "./get/machine_data/gameByID";
+import allMachineNames from "./get/machine_data/allMachineNames";
+import machineByID from "./get/machine_data/machineByID";
 import getContactType from "./get/contacts/byType/getContactType";
 import touchTimestamp from "./put/touchTimestamp";
 import Prisma from "@prisma/client";
@@ -8,6 +8,8 @@ import validateType from "../validation/get/validateContactType";
 import validateUUID from "../validation/get/validateUUID";
 import validateOpState from "../validation/get/validateOpState";
 import byOpState from "./get/machine_data/byOpState/byOpState";
+import validateUpdateManyMachine_Data from "../validation/put/validateUpdateManyMachine_Data";
+import manyMachinesById from "./get/machine_data/manyMachinesById";
 const express = require("express")
 export const getRouter=express.Router()
 
@@ -15,7 +17,7 @@ export const getRouter=express.Router()
  * Retrieve all game names
  */
 getRouter.get('/machine_data/names',async (req:Request,res:Response,next:NextFunction)=>{
-    allGameNames()
+    allMachineNames()
         .then((results)=>{
             res.json(results)
         })
@@ -31,7 +33,7 @@ getRouter.get('/machine_data/names',async (req:Request,res:Response,next:NextFun
  */
 getRouter.param('/machine_data/:id',validateUUID)
 getRouter.get("/machine_data/:id",async (req:Request,res:Response,next:NextFunction)=>{
-    gameByID(req.params.id)
+    machineByID(req.params.id)
         .then((results)=>{
             touchTimestamp(results.timestampObject.id)
             res.json(results)
