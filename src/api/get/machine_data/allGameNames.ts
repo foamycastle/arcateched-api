@@ -4,10 +4,10 @@ export default async function allGameNames(){
     return prismaClient.machine_data.findMany({
         select: {
             id: true,
-            gameName: true
+            name: true
         },
         orderBy: {
-            gameName: 'asc'
+            name: 'asc'
         }
     })
 }

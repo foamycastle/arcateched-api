@@ -1,18 +1,25 @@
 import { Prisma } from "@prisma/client";
 import {prismaClient} from "../../prisma/prismaClient";
 
-export default async function (id:string|null, user?:string){
+export default async function (id:string|null, user?:string, modified?:boolean){
     if (!id) return null;
-    const updateObject:Prisma.timestampUpdateArgs={
+    const timestamp=new Date()
+    const updateObject:Prisma.timestampUpsertArgs={
         where:{
             id:id
         },
-        data:{
-            lastAccess: new Date()
+        update:{
+            lastAccess:timestamp
+        },
+        create:{
+            createdAt:timestamp
         }
     }
     if(user){
-        updateObject.data.lastAccessBy = user
+        updateObject.update.lastAccessBy = user
     }
-    return prismaClient.timestamp.update(updateObject)
+    if(modified){
+        updateObject.update.modifiedAt = timestamp
+    }
+    return prismaClient.timestamp.upsert(updateObject)
 }

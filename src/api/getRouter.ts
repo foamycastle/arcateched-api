@@ -33,7 +33,7 @@ getRouter.param('/machine_data/:id',validateUUID)
 getRouter.get("/machine_data/:id",async (req:Request,res:Response,next:NextFunction)=>{
     gameByID(req.params.id)
         .then((results)=>{
-            touchTimestamp(results.timestamp_machine_data_timestampTotimestamp.id)
+            touchTimestamp(results.timestampObject.id)
             res.json(results)
         })
         .catch((error)=>{

@@ -8,7 +8,7 @@ export default async function gameByID(id:string){
         },
         select:{
             id:true,
-            gameName:true,
+            name:true,
             gameType:true,
             gameZone:true,
             modelNumber:true,
@@ -18,8 +18,8 @@ export default async function gameByID(id:string){
             dateExit:true,
             occupied:true,
             playerCount:true,
-            keyCabinet:true,
-            keyService:true,
+            cabinetKey:true,
+            serviceKey:true,
             attachments:true,
             contacts:true,
             issues:true,
@@ -30,27 +30,27 @@ export default async function gameByID(id:string){
                 select:{
                     id:true,
                     createdAt:true,
-                    users_timestamp_createdByTousers:{
+                    user_createdBy:{
                         select:{
                             id:true,
                             username:true,
-                            user_display_name:true
+                            displayName:true
                         }
                     },
                     lastAccess:true,
-                    users_timestamp_lastAccessByTousers:{
+                    user_lastAccessBy:{
                         select:{
                             id:true,
                             username:true,
-                            user_display_name:true
+                            displayName:true
                         }
                     },
                     modifiedAt:true,
-                    users_timestamp_modifiedByTousers:{
+                    user_modifiedBy:{
                         select:{
                             id:true,
                             username:true,
-                            user_display_name:true
+                            displayName:true
                         }
                     },
                 }

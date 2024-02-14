@@ -1,16 +1,16 @@
 import {prismaClient} from "../../../prisma/prismaClient";
 import {Prisma} from "@prisma/client";
 
-export default async function (input){
+export default async function (input:Prisma.machine_dataUpdateInput){
     const recordId = input.id
     delete input.id
     const updateObject:Prisma.machine_dataUpdateArgs={
         where:{
-            id:recordId
+            id:<string>recordId
         },
         data:{
             ...input,
-            timestamp_machine_data_timestampTotimestamp:{
+            timestampObject:{
                 upsert:{
                     create:{createdAt:new Date},
                     update:{modifiedAt:new Date}
@@ -19,7 +19,7 @@ export default async function (input){
         },
         select:{
             id:true,
-            gameName:true
+            name:true
         }
     }
 
