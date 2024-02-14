@@ -1,0 +1,51 @@
+import {Prisma} from "@prisma/client";
+export const select_machine_data_all:Prisma.machine_dataSelect={
+    id:true,
+    name:true,
+    gameType:true,
+    gameZone:true,
+    modelNumber:true,
+    serialNumber:true,
+    dateOfMfg:true,
+    dateEnter:true,
+    dateExit:true,
+    occupied:true,
+    playerCount:true,
+    cabinetKey:true,
+    serviceKey:true,
+    attachments:true,
+    contacts:true,
+    issues:true,
+    todo:true,
+    opState:true,
+    comments:true,
+    timestampObject: {
+        select:{
+            id:true,
+                createdAt:true,
+                user_createdBy:{
+                select:{
+                    id:true,
+                        username:true,
+                        displayName:true
+                }
+            },
+            lastAccess:true,
+                user_lastAccessBy:{
+                select:{
+                    id:true,
+                        username:true,
+                        displayName:true
+                }
+            },
+            modifiedAt:true,
+                user_modifiedBy:{
+                select:{
+                    id:true,
+                        username:true,
+                        displayName:true
+                }
+            },
+        }
+    }
+}
