@@ -14,7 +14,7 @@ const express = require("express")
 export const getRouter=express.Router()
 
 /**
- * Retrieve all game names
+ * Retrieve all machine names
  */
 getRouter.get('/machine_data/names',async (req:Request,res:Response,next:NextFunction)=>{
     allMachineNames()
@@ -29,7 +29,7 @@ getRouter.get('/machine_data/names',async (req:Request,res:Response,next:NextFun
 })
 
 /**
- * Retrieve a single game record by its ID
+ * Retrieve a single machine record by its ID
  */
 getRouter.param('/machine_data/:id',validateUUID)
 getRouter.get("/machine_data/:id",async (req:Request,res:Response,next:NextFunction)=>{
@@ -56,6 +56,10 @@ getRouter.get("/machine_data/:id",async (req:Request,res:Response,next:NextFunct
             })
         })
 })
+
+/**
+ * Retrieve a list of machines by the given identifiers
+ */
 getRouter.use('/machine_data/manyMachinesById',validateUpdateManyMachine_Data)
 getRouter.get('/machine_data/manyMachinesById',async (req:Request,res:Response)=>{
     manyMachinesById(req.body)
@@ -69,14 +73,18 @@ getRouter.get('/machine_data/manyMachinesById',async (req:Request,res:Response)=
         })
 })
 
+/**
+ * Retrieve a list of machines by their operational state
+ */
 getRouter.param('opState',validateOpState)
 getRouter.get('/machine_data/byOpState/:opState',async (req:Request,res:Response)=>{
     byOpState(<Prisma.opState>req.params.opState)
         .then(results=>res.json(results))
         .catch(error=>console.log(error))
 })
+
 /**
- * Retrieve A List of machines whose contact relation contains a certain type
+ * Retrieve A List of contacts whose type is the given type
  */
 getRouter.param('contactType',validateType)
 getRouter.get("/contacts/byType/:contactType",async (req:Request,res:Response)=>{
