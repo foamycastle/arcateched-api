@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRouter = void 0;
 const allGameNames_1 = __importDefault(require("./get/machine_data/allGameNames"));
 const gameByID_1 = __importDefault(require("./get/machine_data/gameByID"));
-const getContactType_1 = __importDefault(require("./get/contacts/getContactType"));
+const getContactType_1 = __importDefault(require("./get/contacts/byType/getContactType"));
 const touchTimestamp_1 = __importDefault(require("./put/touchTimestamp"));
 const validateContactType_1 = __importDefault(require("../../validation/get/validateContactType"));
 const validateUUID_1 = __importDefault(require("../../validation/get/validateUUID"));

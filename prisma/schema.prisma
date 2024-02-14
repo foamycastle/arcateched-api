@@ -155,6 +155,7 @@ model machine_data {
   occupied                                    Float?
   timestamp                                   String?        @db.Uuid
   mfgUUID                                     String?        @db.Uuid
+  opStatus                                    StatusTags?
   attachments                                 attachments[]
   comments                                    comments[]
   issues                                      issues[]

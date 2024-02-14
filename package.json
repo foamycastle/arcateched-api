@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "./dist/index.js"
+    "start": "./dist/index.js",
+    "prisma-rebuild": "npx prisma db pull --force && npx prisma generate"
   },
   "dependencies": {
     "@prisma/client": "5.9.1",
