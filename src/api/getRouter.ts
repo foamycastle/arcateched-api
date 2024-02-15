@@ -1,9 +1,3 @@
-import {Request, Response, NextFunction} from "express";
-import allMachineNames from "./get/machine_data/allMachineNames";
-import machineByID from "./get/machine_data/machineByID";
-import getContactType from "./get/contacts/byType/getContactType";
-import touchTimestamp from "./put/touchTimestamp";
-import Prisma from "@prisma/client";
 import validateType from "../validation/get/validateContactType";
 import validateUUID from "../validation/get/validateUUID";
 import validateOpState from "../validation/get/validateOpState";
