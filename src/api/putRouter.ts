@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from "express";
 import validateUpdateMachine_Data from "../validation/put/validateUpdateMachine_Data";
-import modifyMachine_Data from "./put/machine_data/modifyMachine_Data";
-import modifyManyMachine_Data from "./put/machine_data/modifyManyMachine_Data";
+import modifyMachine_Data from "../CRUD/machine_data/put_modifyMachine_Data";
+import modifyManyMachine_Data from "../CRUD/machine_data/put_modifyManyMachine_Data";
 import validateUpdateManyMachine_Data from "../validation/put/validateUpdateManyMachine_Data";
 const express = require("express")
 export const putRouter=express.Router()

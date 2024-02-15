@@ -1,91 +1,22 @@
 import validateType from "../validation/get/validateContactType";
 import validateUUID from "../validation/get/validateUUID";
 import validateOpState from "../validation/get/validateOpState";
-import byOpState from "./get/machine_data/byOpState/byOpState";
-import validateUpdateManyMachine_Data from "../validation/put/validateUpdateManyMachine_Data";
-import manyMachinesById from "./get/machine_data/manyMachinesById";
+import validateManyMachineById from "../validation/get/validateManyMachineById";
+import * as RouterPaths from '../rsc/getRouterPaths'
+import * as GetHandlers from './getHandlers'
 const express = require("express")
 export const getRouter=express.Router()
 
-/**
- * Retrieve all machine names
- */
-getRouter.get('/machine_data/names',async (req:Request,res:Response,next:NextFunction)=>{
-    allMachineNames()
-        .then((results)=>{
-            res.json(results)
-        })
-        .catch((error)=>{
-            res
-                .status(500)
-                .json(error)
-        })
-})
-
-/**
- * Retrieve a single machine record by its ID
- */
-getRouter.param('/machine_data/:id',validateUUID)
-getRouter.get("/machine_data/:id",async (req:Request,res:Response,next:NextFunction)=>{
-    machineByID(req.params.id)
-        .then((results)=>{
-            touchTimestamp(results.timestampObject.id)
-            res.json(results)
-        })
-        .catch((error)=>{
-            if(error.code){
-                switch (error.code){
-                    case 'P2025':
-                        res.status(404)
-                        break;
-                    default:
-                        res.status(500)
-                        break;
-                }
-            }
-            res.json({
-                error:{
-                    message:error.message
-                }
-            })
-        })
-})
-
-/**
- * Retrieve a list of machines by the given identifiers
- */
-getRouter.use('/machine_data/manyMachinesById',validateUpdateManyMachine_Data)
-getRouter.get('/machine_data/manyMachinesById',async (req:Request,res:Response)=>{
-    manyMachinesById(req.body)
-        .then(result=>res.json(result))
-        .catch((error)=>{
-            res.json({
-                error:{
-                    message:error.message
-                }
-            })
-        })
-})
-
-/**
- * Retrieve a list of machines by their operational state
- */
+getRouter.param('id',validateUUID)
 getRouter.param('opState',validateOpState)
-getRouter.get('/machine_data/byOpState/:opState',async (req:Request,res:Response)=>{
-    byOpState(<Prisma.opState>req.params.opState)
-        .then(results=>res.json(results))
-        .catch(error=>console.log(error))
-})
-
-/**
- * Retrieve A List of contacts whose type is the given type
- */
 getRouter.param('contactType',validateType)
-getRouter.get("/contacts/byType/:contactType",async (req:Request,res:Response)=>{
 
-    getContactType(<Prisma.contactType>req.params.contactType)
-        .then(results => res.json(results))
-        .catch(error=>res.status(400).json({error:{message: error.message}}))
-})
+getRouter.use(RouterPaths.manyMachinesByIdPath,validateManyMachineById)
+
+getRouter.get(RouterPaths.machineNamesPath,GetHandlers.machineNamesHandler)
+getRouter.get(RouterPaths.machineByIdPath,GetHandlers.machineByIdHandler)
+getRouter.get(RouterPaths.manyMachinesByIdPath,GetHandlers.manyMachinesByIdHandler)
+getRouter.get(RouterPaths.machineByOpStatePath,GetHandlers.machineByOpStateHandler)
+getRouter.get(RouterPaths.contactsByTypePath,GetHandlers.contactsByTypeHandler)
 
 console.log('getRouter')
