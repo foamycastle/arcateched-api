@@ -1,0 +1,1 @@
+export const postMachineDataPath:string = '/machine_data'

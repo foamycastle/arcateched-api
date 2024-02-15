@@ -1,11 +1,13 @@
 import {Prisma} from "@prisma/client";
 import {prismaClient} from "../../prisma/prismaClient";
+import {not} from "joi";
 
 export default async function (data:Prisma.machine_dataCreateInput){
     const timestamp=new Date();
     return prismaClient.machine_data.upsert({
         where:{
-            serialNumber:data.serialNumber
+            name: data.name,
+            serialNumber: data.serialNumber
         },
         create:{
             ...data,
