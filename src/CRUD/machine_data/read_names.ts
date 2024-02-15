@@ -1,6 +1,6 @@
-import {prismaClient} from "../../../prisma/prismaClient";
+import {prismaClient} from "../../prisma/prismaClient";
 
-export default async function allMachineNames(){
+export default async function (){
     return prismaClient.machine_data.findMany({
         select: {
             id: true,

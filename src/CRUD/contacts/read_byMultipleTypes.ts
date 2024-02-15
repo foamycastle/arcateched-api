@@ -1,4 +1,4 @@
-import {prismaClient} from "../../../../prisma/prismaClient";
+import {prismaClient} from "../../prisma/prismaClient";
 import Prisma from '@prisma/client'
 
 export default async function (types:Array<Prisma.contactType>){

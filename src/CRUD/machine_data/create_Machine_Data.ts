@@ -1,5 +1,5 @@
 import {Prisma} from "@prisma/client";
-import {prismaClient} from "../../../prisma/prismaClient";
+import {prismaClient} from "../../prisma/prismaClient";
 
 export default async function (data:Prisma.machine_dataCreateInput){
     const timestamp=new Date();
