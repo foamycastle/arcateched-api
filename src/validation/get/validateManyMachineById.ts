@@ -12,7 +12,10 @@ export default function (req:Request,res:Response,next:NextFunction){
                         'uuidv4'
                     ]
                 })
-        ).validate(req.body)
+        )
+        .required()
+        .min(1)
+        .validate(req.body)
 
     if(validateBodyArray.error){
         res
