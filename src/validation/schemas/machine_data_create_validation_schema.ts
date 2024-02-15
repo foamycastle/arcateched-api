@@ -1,32 +1,36 @@
 import Joi from "joi";
-import {gameType} from "@prisma/client";
+import Prisma from "@prisma/client";
+import {UUID} from "./UUID";
 
 export const machine_dataCreateValidationSchema=Joi.object({
     gameName:Joi.string()
         .required()
         .min(4)
-        .max(64).truncate()
+        .max(64)
+        .truncate()
         .trim(),
     modelNumber:Joi.string()
         .max(32)
-        .trim(),
+        .trim()
+        .optional(),
     serialNumber:Joi.string()
         .required()
         .max(32)
         .trim(),
-    dateEntered:Joi.date(),
-    dateOfMfg:Joi.date()
+    dateEntered:Joi.date().optional(),
+    dateExit:Joi.date().optional(),
+    dateOfMfg:Joi.date().optional()
         .less(Joi.ref('dateEntered')),
-    mfgUUID:Joi.string()
-        .uuid({
-            version:[
-                'uuidv1',
-                'uuidv4'
-            ]
-        }),
-    cabinetKey:Joi.ref('mfgUUID'),
-    serviceKey:Joi.ref('mfgUUID'),
-    gameType:Joi.array<gameType>(),
-    gameZone:Joi.ref('mfgUUID'),
-    occupied:Joi.number().precision(3)
+    gameType:Joi.array().optional()
+        .items(
+            Joi
+                .string()
+                .valid(...Array<Prisma.$Enums.gameType>(Prisma.gameType[Symbol.iterator]))
+        ),
+    gameZone:UUID,
+    occupied:Joi.number().precision(3),
+    contacts:Joi.object().optional(),
+    attachments:Joi.object().optional(),
+    keys:Joi.object().optional(),
+
 })
