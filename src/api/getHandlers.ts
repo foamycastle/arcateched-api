@@ -6,6 +6,8 @@ import read_getContactType from "../CRUD/contacts/read_getContactType";
 import read_names from "../CRUD/machine_data/read_names";
 import read_machine from "../CRUD/machine_data/read_machine";
 import touchTimestamp from "../CRUD/touchTimestamp";
+import {prismaClient} from "../prisma/prismaClient";
+import read_byMultipleTypes from "../CRUD/contacts/read_byMultipleTypes";
 
 /**
  * Retrieve a list of machines by the given identifiers
@@ -67,36 +69,6 @@ export async function machineByOpStateHandler(req:Request, res:Response){
 }
 
 /**
- * Retrieve A List of contacts whose type is the given type
- */
-export async function contactsByTypeHandler(req:Request,res:Response){
-    read_getContactType(<Prisma.contactType>req.params.contactType)
-        .then((results) => {
-            if(results.length==0){
-                res
-                    .status(404)
-                    .json({
-                        error:{
-                            message:`No contacts with the ${req.params.contactType} type`
-                        }
-                    })
-                return
-            }
-            res.json(results)
-        })
-        .catch((error)=> {
-            res
-                .status(400)
-                .json({
-                    error: {
-                        message: error.message
-                    }
-                })
-            return
-        })
-}
-
-/**
  * Retrieve all read_machine read_names
  */
 export async function machineNamesHandler(req:Request,res:Response,next:NextFunction){
@@ -151,5 +123,60 @@ export async function machineByIdHandler(req:Request,res:Response,next:NextFunct
                     message:error.message
                 }
             })
+        })
+}
+
+
+/**
+ * Retrieve A List of contacts whose type is the given type
+ */
+export async function contactsByTypeHandler(req:Request,res:Response){
+    read_getContactType(<Prisma.contactType>req.params.contactType)
+        .then((results) => {
+            if(results.length==0){
+                res
+                    .status(404)
+                    .json({
+                        error:{
+                            message:`No contacts with the ${req.params.contactType} type`
+                        }
+                    })
+                return
+            }
+            res.json(results)
+        })
+        .catch((error)=> {
+            res
+                .status(400)
+                .json({
+                    error: {
+                        message: error.message
+                    }
+                })
+            return
+        })
+}
+
+export async function contactsByManyTypesHandler(req:Request,res:Response){
+    read_byMultipleTypes(req.body)
+        .then((result)=>{
+            if(result.length==0){
+                res
+                    .status(404)
+                    .json({
+                        error:{
+                            message:`No contacts found with the specified types (${req.body.toString()})`
+                        }
+                    })
+                return;
+            }
+            res.json(result)
+        })
+        .catch((error)=>{
+            res
+                .status(500)
+                .json({
+                    error:error.message
+                })
         })
 }
