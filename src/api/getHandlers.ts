@@ -126,7 +126,6 @@ export async function machineByIdHandler(req:Request,res:Response,next:NextFunct
         })
 }
 
-
 /**
  * Retrieve A List of contacts whose type is the given type
  */
@@ -157,6 +156,11 @@ export async function contactsByTypeHandler(req:Request,res:Response){
         })
 }
 
+/**
+ * Retrieve a list of contacts whose types contain all those specified in the body of the request
+ * @param req
+ * @param res
+ */
 export async function contactsByManyTypesHandler(req:Request,res:Response){
     read_byMultipleTypes(req.body)
         .then((result)=>{
