@@ -6,7 +6,6 @@ import read_getContactType from "../CRUD/contacts/read_getContactType";
 import read_names from "../CRUD/machine_data/read_names";
 import read_machine from "../CRUD/machine_data/read_machine";
 import touchTimestamp from "../CRUD/touchTimestamp";
-import {prismaClient} from "../prisma/prismaClient";
 import read_byMultipleTypes from "../CRUD/contacts/read_byMultipleTypes";
 
 /**
