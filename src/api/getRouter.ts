@@ -2,7 +2,6 @@ import validateType from "../validation/get/validateContactType";
 import validateUUID from "../validation/get/validateUUID";
 import validateOpState from "../validation/get/validateOpState";
 import validateManyMachineById from "../validation/get/validateManyMachineById";
-import validateContactsByManyTypes from "../validation/get/validateContactsByManyTypes";
 import validateByGameType from "../validation/get/validateByGameType";
 import * as RouterPaths from '../rsc/getRouterPaths'
 import * as GetHandlers from './getHandlers'
