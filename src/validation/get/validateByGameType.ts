@@ -6,8 +6,7 @@ export default function (req:Request,res:Response,next:NextFunction) {
     const findJoi= Joi.array<Prisma.gameType>()
         .items(
             Joi.string()
-                .valid(...Object.entries($Enums.gameType)
-                )
+                .valid(...Object.entries($Enums.gameType)[0])
         ).validate(req.body)
 
     if(findJoi.error){
