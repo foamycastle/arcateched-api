@@ -1,11 +1,11 @@
 import {prismaClient} from "../../prisma/prismaClient";
 import Prisma from "@prisma/client";
 
-export default async function (type:Prisma.contactType){
+export default async function (type:Prisma.contactType[]){
     return prismaClient.contacts.findMany({
         where:{
             type:{
-                has:type
+                hasEvery:type
             }
         },
         select:{

@@ -6,7 +6,6 @@ import read_getContactType from "../CRUD/contacts/read_getContactType";
 import read_names from "../CRUD/machine_data/read_names";
 import read_machine from "../CRUD/machine_data/read_machine";
 import touchTimestamp from "../CRUD/touchTimestamp";
-import read_byMultipleTypes from "../CRUD/contacts/read_byMultipleTypes";
 import read_byGameType from "../CRUD/machine_data/read_byGameType";
 
 /**
@@ -150,7 +149,7 @@ export function machineByGameTypeHandler(req:Request, res:Response){
  * Retrieve A List of contacts whose type is the given type
  */
 export function contactsByTypeHandler(req:Request,res:Response){
-    read_getContactType(<Prisma.contactType>req.params.contactType)
+    read_getContactType(req.body)
         .then((results) => {
             if(results.length==0){
                 res
@@ -173,34 +172,5 @@ export function contactsByTypeHandler(req:Request,res:Response){
                     }
                 })
             return
-        })
-}
-
-/**
- * Retrieve a list of contacts whose types contain all those specified in the body of the request
- * @param req
- * @param res
- */
-export function contactsByManyTypesHandler(req:Request,res:Response){
-    read_byMultipleTypes(req.body)
-        .then((result)=>{
-            if(result.length==0){
-                res
-                    .status(404)
-                    .json({
-                        error:{
-                            message:`No contacts found with the specified types (${req.body.toString()})`
-                        }
-                    })
-                return;
-            }
-            res.json(result)
-        })
-        .catch((error)=>{
-            res
-                .status(500)
-                .json({
-                    error:error.message
-                })
         })
 }
