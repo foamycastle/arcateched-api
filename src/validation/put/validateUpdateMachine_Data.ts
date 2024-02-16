@@ -6,13 +6,7 @@ import {machine_dataUpdateValidationSchema} from "../schemas/machine_data/machin
 export default async function validateUpdateMachine_Data(input:Request, res:Response, next:NextFunction){
     const validated= machine_dataUpdateValidationSchema.validate(input.body)
         if(validated.error){
-            res
-                .status(400)
-                .json({
-                    error:{
-                        validationError:validated.error.details
-                    }
-                })
+            next('route')
         }
         next()
 }
