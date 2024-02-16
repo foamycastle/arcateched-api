@@ -1,4 +1,4 @@
-import {Request,Response,NextFunction} from "express";
+import {Request,Response} from "express";
 import Prisma from "@prisma/client";
 import manyMachinesById from "../CRUD/machine_data/read_manyMachinesById";
 import byOpState from "../CRUD/machine_data/read_byOpState";
@@ -70,7 +70,7 @@ export function machineByOpStateHandler(req:Request, res:Response){
 /**
  * Retrieve all read_machine read_names
  */
-export function machineNamesHandler(req:Request,res:Response,next:NextFunction){
+export function machineNamesHandler(req:Request,res:Response){
     read_names()
         .then((results)=>{
             if(results.length==0){
@@ -100,7 +100,7 @@ export function machineNamesHandler(req:Request,res:Response,next:NextFunction){
 /**
  * Retrieve a single read_machine record by its ID
  */
-export function machineByIdHandler(req:Request,res:Response,next:NextFunction){
+export function machineByIdHandler(req:Request,res:Response){
     read_machine(req.params.id)
         .then((results)=>{
             touchTimestamp(results.timestampObject.id)
