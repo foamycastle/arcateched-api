@@ -4,7 +4,7 @@ import {UUID} from "../UUID";
 
 export const contacts =
     Joi.object<Prisma.Prisma.contactsCreateNestedOneWithoutMachine_dataInput>({
-        connect:Joi.object<Prisma.Prisma.contactsWhereUniqueInput>({
-            id:UUID.required()
-        }),
+        create:Joi.object().optional(),
+        connectOrCreate:Joi.object().optional(),
+        connect:Joi.object().optional()
     })
