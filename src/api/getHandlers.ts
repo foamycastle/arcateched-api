@@ -12,7 +12,7 @@ import read_byMultipleTypes from "../CRUD/contacts/read_byMultipleTypes";
 /**
  * Retrieve a list of machines by the given identifiers
  */
-export async function manyMachinesByIdHandler(req:Request,res:Response){
+export function manyMachinesByIdHandler(req:Request,res:Response){
     manyMachinesById(req.body)
         .then((result)=> {
             if(result.length==0){
@@ -41,7 +41,7 @@ export async function manyMachinesByIdHandler(req:Request,res:Response){
 /**
  * Retrieve a list of machines by their operational state
  */
-export async function machineByOpStateHandler(req:Request, res:Response){
+export function machineByOpStateHandler(req:Request, res:Response){
     byOpState(<Prisma.opState>req.params.opState)
         .then((results)=> {
             if(results.length==0){
@@ -71,7 +71,7 @@ export async function machineByOpStateHandler(req:Request, res:Response){
 /**
  * Retrieve all read_machine read_names
  */
-export async function machineNamesHandler(req:Request,res:Response,next:NextFunction){
+export function machineNamesHandler(req:Request,res:Response,next:NextFunction){
     read_names()
         .then((results)=>{
             if(results.length==0){
@@ -101,7 +101,7 @@ export async function machineNamesHandler(req:Request,res:Response,next:NextFunc
 /**
  * Retrieve a single read_machine record by its ID
  */
-export async function machineByIdHandler(req:Request,res:Response,next:NextFunction){
+export function machineByIdHandler(req:Request,res:Response,next:NextFunction){
     read_machine(req.params.id)
         .then((results)=>{
             touchTimestamp(results.timestampObject.id)
@@ -129,7 +129,7 @@ export async function machineByIdHandler(req:Request,res:Response,next:NextFunct
 /**
  * Retrieve A List of contacts whose type is the given type
  */
-export async function contactsByTypeHandler(req:Request,res:Response){
+export function contactsByTypeHandler(req:Request,res:Response){
     read_getContactType(<Prisma.contactType>req.params.contactType)
         .then((results) => {
             if(results.length==0){
@@ -161,7 +161,7 @@ export async function contactsByTypeHandler(req:Request,res:Response){
  * @param req
  * @param res
  */
-export async function contactsByManyTypesHandler(req:Request,res:Response){
+export function contactsByManyTypesHandler(req:Request,res:Response){
     read_byMultipleTypes(req.body)
         .then((result)=>{
             if(result.length==0){
