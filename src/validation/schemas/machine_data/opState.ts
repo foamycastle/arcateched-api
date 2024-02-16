@@ -1,9 +1,9 @@
 import Joi from "joi";
-import Prisma from "@prisma/client";
+import Prisma, {$Enums} from "@prisma/client";
 
-export const opState=Joi.array().optional()
-    .items(
-        Joi
-            .string()
-            .valid(...Array<Prisma.$Enums.opState>(Prisma.opState[Symbol.iterator]))
-    )
+export function opState<T>() {
+    return Joi.array()
+        .items(...Object.keys($Enums.opState))
+        .max(3)
+        .optional()
+}

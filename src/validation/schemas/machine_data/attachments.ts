@@ -3,11 +3,11 @@ import Prisma from "@prisma/client";
 import {UUID} from "../UUID";
 
 export const attachments =
-    Joi.object<Prisma.Prisma.attachmentsCreateOrConnectWithoutMachine_dataInput>({
-       where:Joi.object<Prisma.Prisma.keysWhereUniqueInput>({
-           id:UUID
-       })
-           .required(),
+    Joi.object<Prisma.Prisma.attachmentsCreateNestedManyWithoutMachine_dataInput>({
 
-       create:Joi.object().required()
+        createMany:Joi.object().optional(),
+        connect:Joi.object().optional(),
+        create:Joi.object().optional(),
+        connectOrCreate:Joi.object().optional()
+
     })

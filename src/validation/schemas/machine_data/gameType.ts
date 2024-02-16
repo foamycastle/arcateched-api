@@ -1,9 +1,10 @@
 import Joi from "joi";
-import Prisma from "@prisma/client";
+import Prisma, {$Enums} from "@prisma/client";
 
-export const gameType=Joi.array().optional()
-    .items(
-        Joi
-            .string()
-            .valid(...Array<Prisma.$Enums.gameType>(Prisma.gameType[Symbol.iterator]))
-    )
+
+export function gameType() {
+    return Joi.array()
+        .items(...Object.keys($Enums.gameType))
+        .max(3)
+        .optional()
+}
