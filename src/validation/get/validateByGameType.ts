@@ -12,7 +12,9 @@ export default function (req:Request,res:Response,next:NextFunction) {
     if(findJoi.error){
         res
             .status(400)
-            .json()
+            .json({
+                error:findJoi.error
+            })
         return
     }
     next();
