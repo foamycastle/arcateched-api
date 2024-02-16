@@ -21,7 +21,7 @@ getRouter.get(RouterPaths.machineNamesPath,GetHandlers.machineNamesHandler)
 getRouter.get(RouterPaths.machineByIdPath,GetHandlers.machineByIdHandler)
 getRouter.get(RouterPaths.manyMachinesByIdPath,GetHandlers.manyMachinesByIdHandler)
 getRouter.get(RouterPaths.machineByOpStatePath,GetHandlers.machineByOpStateHandler)
-getRouter.get(RouterPaths.machineByGameType,GetHandlers.machineByGameType)
+getRouter.get(RouterPaths.machineByGameType,GetHandlers.machineByGameTypeHandler)
 getRouter.get(RouterPaths.contactsByTypePath,GetHandlers.contactsByTypeHandler)
 getRouter.get(RouterPaths.contactsByManyTypesPath,GetHandlers.contactsByManyTypesHandler)
 

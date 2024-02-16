@@ -125,7 +125,7 @@ export function machineByIdHandler(req:Request,res:Response,next:NextFunction){
             })
         })
 }
-export function machineByGameType(req:Request,res:Response){
+export function machineByGameTypeHandler(req:Request, res:Response){
     read_byGameType(req.body)
         .then((results)=>{
             if(results.length==0){
