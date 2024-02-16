@@ -128,7 +128,7 @@ export function machineByIdHandler(req:Request,res:Response,next:NextFunction){
 export function machineByGameType(req:Request,res:Response){
     read_byGameType(req.body)
         .then((results)=>{
-            if(results.length){
+            if(results.length==0){
                 res
                     .status(404)
                     .json({
@@ -138,8 +138,12 @@ export function machineByGameType(req:Request,res:Response){
                     })
                 return
             }
+            res.json(results)
         })
-        .catch(error=>res.status(500).json(error))
+        .catch((error)=> {
+            console.log(error)
+            res.status(500).json(error)
+        })
 }
 
 /**
