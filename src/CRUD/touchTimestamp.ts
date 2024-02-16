@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import {prismaClient} from "../prisma/prismaClient";
 
-export default async function (id:string|null, user?:string, modified?:boolean){
+export default function (id:string|null, user?:string, modified?:boolean){
     if (!id) return null;
     const timestamp=new Date()
     const updateObject:Prisma.timestampUpsertArgs={

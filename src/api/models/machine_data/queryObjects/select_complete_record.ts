@@ -1,5 +1,5 @@
 import {Prisma} from "@prisma/client";
-export const select_machine_data_all:Prisma.machine_dataSelect={
+export const select_complete_record:Prisma.machine_dataSelect={
     id:true,
     name:true,
     gameType:true,
@@ -10,28 +10,39 @@ export const select_machine_data_all:Prisma.machine_dataSelect={
     dateEnter:true,
     dateExit:true,
     occupied:true,
+    opState:true,
     playerCount:true,
     cabinetKey:true,
     serviceKey:true,
     attachments:true,
-    contacts:true,
-    issues:true,
-    todo:true,
-    opState:true,
-    comments:true,
-    timestampObject: {
+    timestamp:true,
+    contacts:{
         select:{
             id:true,
-                createdAt:true,
-                user_createdBy:{
+            name:true,
+            type:true,
+
+        }
+    },
+    issues:true,
+    todo:true,
+    comments:{
+        select:{
+            content:true
+        }
+    },
+    timestampObject: {
+        select:{
+            createdAt:true,
+            user_createdBy:{
                 select:{
                     id:true,
-                        username:true,
-                        displayName:true
+                    username:true,
+                    displayName:true
                 }
             },
             lastAccess:true,
-                user_lastAccessBy:{
+            user_lastAccessBy:{
                 select:{
                     id:true,
                         username:true,
@@ -39,7 +50,7 @@ export const select_machine_data_all:Prisma.machine_dataSelect={
                 }
             },
             modifiedAt:true,
-                user_modifiedBy:{
+            user_modifiedBy:{
                 select:{
                     id:true,
                         username:true,
