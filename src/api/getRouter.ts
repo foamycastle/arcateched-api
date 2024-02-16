@@ -11,11 +11,10 @@ export const getRouter=express.Router()
 
 getRouter.param('id',validateUUID)
 getRouter.param('opState',validateOpState)
-getRouter.param('contactType',validateType)
 
 getRouter.use(RouterPaths.manyMachinesByIdPath,validateManyMachineById)
-getRouter.use(RouterPaths.contactsByManyTypesPath,validateContactsByManyTypes)
 getRouter.use(RouterPaths.machineByGameType,validateByGameType)
+getRouter.use(RouterPaths.contactsByTypePath,validateType)
 
 getRouter.get(RouterPaths.machineNamesPath,GetHandlers.machineNamesHandler)
 getRouter.get(RouterPaths.machineByIdPath,GetHandlers.machineByIdHandler)

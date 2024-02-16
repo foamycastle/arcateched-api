@@ -1,9 +1,9 @@
 import Prisma from '@prisma/client'
 import {NextFunction, Request, Response} from "express";
 
-export default function (req:Request,res:Response,next:NextFunction,contactType:string){
+export default function (req:Request,res:Response,next:NextFunction){
 
-    if(Prisma.contactType[contactType]){
+    if(contactType in Prisma.contactType){
         next()
         return
     }
@@ -11,7 +11,7 @@ export default function (req:Request,res:Response,next:NextFunction,contactType:
         .status(400)
         .json({
             error:{
-                message:`'${req.params.type}' is not a valid contact type`
+                message:`'${contactType}' is not a valid contact type`
             }
         })
 }
