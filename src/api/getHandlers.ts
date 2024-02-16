@@ -7,6 +7,7 @@ import read_names from "../CRUD/machine_data/read_names";
 import read_machine from "../CRUD/machine_data/read_machine";
 import touchTimestamp from "../CRUD/touchTimestamp";
 import read_byMultipleTypes from "../CRUD/contacts/read_byMultipleTypes";
+import read_byGameType from "../CRUD/machine_data/read_byGameType";
 
 /**
  * Retrieve a list of machines by the given identifiers
@@ -123,6 +124,22 @@ export function machineByIdHandler(req:Request,res:Response,next:NextFunction){
                 }
             })
         })
+}
+export function machineByGameType(req:Request,res:Response){
+    read_byGameType(req.body)
+        .then((results)=>{
+            if(results.length){
+                res
+                    .status(404)
+                    .json({
+                        error:{
+                            message:"Found 0 machines marked with all of the specified types"
+                        }
+                    })
+                return
+            }
+        })
+        .catch(error=>res.status(500).json(error))
 }
 
 /**
