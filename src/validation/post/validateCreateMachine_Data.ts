@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {machine_dataCreateValidationSchema} from "../schemas/machine_data_create_validation_schema";
+import {machine_dataCreateValidationSchema} from "../schemas/machine_data/machine_data_create_validation_schema";
 
 export default function validateCreateMachine_Data(input:Request, res:Response, next:NextFunction){
      const findJoi= machine_dataCreateValidationSchema.validate(input.body)

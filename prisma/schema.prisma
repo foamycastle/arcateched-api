@@ -8,20 +8,20 @@ datasource db {
 }
 
 model attachments {
-  id                                         String        @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
-  label                                      String?       @db.VarChar(64)
-  path                                       String?
-  machine                                    String?       @db.Uuid
-  key                                        String?       @db.Uuid
-  contact                                    String?       @db.Uuid
-  user                                       String?       @db.Uuid
-  type                                       attType?
-  timestamp                                  String?       @db.Uuid
-  contacts                                   contacts?     @relation(fields: [contact], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "contactId_fkey")
-  keys                                       keys?         @relation(fields: [key], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "keyId_fkey")
-  machine_data                               machine_data? @relation(fields: [machine], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "machineId_fkey")
-  timestamp_attachments_timestampTotimestamp timestamp?    @relation("attachments_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
-  users                                      users?        @relation(fields: [user], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "userId_fkey")
+  id              String        @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  label           String?       @db.VarChar(64)
+  path            String?
+  machine         String?       @db.Uuid
+  key             String?       @db.Uuid
+  contact         String?       @db.Uuid
+  user            String?       @db.Uuid
+  type            attType?
+  timestamp       String?       @db.Uuid
+  contacts        contacts?     @relation(fields: [contact], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "contactId_fkey")
+  keys            keys?         @relation(fields: [key], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "keyId_fkey")
+  machine_data    machine_data? @relation(fields: [machine], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "machineId_fkey")
+  timestampObject timestamp?    @relation("attachments_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
+  users           users?        @relation(fields: [user], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "userId_fkey")
 }
 
 model comments {
