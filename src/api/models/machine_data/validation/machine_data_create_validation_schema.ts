@@ -1,5 +1,5 @@
 import Joi from "joi";
-import Prisma from "@prisma/client";
+import {Prisma} from "@prisma/client";
 import {gameType} from "./gameType";
 import {contacts} from "./contacts";
 import {attachments} from "./attachments";
@@ -8,7 +8,7 @@ import {keys} from "./keys";
 import {opState} from "./opState";
 
 export const machine_dataCreateValidationSchema=
-    Joi.object<Prisma.Prisma.machine_dataCreateInput>({
+    Joi.object<Prisma.machine_dataCreateInput>({
         name:Joi.string()
             .required()
             .min(4)

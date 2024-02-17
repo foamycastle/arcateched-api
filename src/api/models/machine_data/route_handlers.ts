@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {$Enums} from "@prisma/client";
+import {$Enums, Prisma} from "@prisma/client";
 import {prismaClient} from "../../../prisma/prismaClient";
 import names from "./crud/read/names";
 import byId from "./crud/read/byId";
