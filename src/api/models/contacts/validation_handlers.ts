@@ -15,3 +15,15 @@ export const validateContactType=(req:Request,res:Response,next:NextFunction)=>{
     }
     next()
 }
+export const validateContactName=(req:Request,res:Response,next:NextFunction):void=>{
+    const findJoi = Joi.object<Prisma.contactsWhereInput>({
+        name:Joi.string().min(1).max(32).required().insensitive().alphanum()
+    }).validate(req.body)
+
+    if(findJoi.error){
+        res.status(400).json(findJoi.error)
+        return
+    }
+    next()
+
+}
