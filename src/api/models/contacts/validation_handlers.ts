@@ -1,5 +1,8 @@
 import {NextFunction, Request, Response} from "express";
 import {contactType} from "./validation/contactType";
+import Joi from "joi";
+import {Prisma} from "@prisma/client";
+import {UUID} from "../../../validation/schemas/UUID";
 import {validate_new_contact} from "./validation/validate_new_contact";
 import {validate_update_contact} from "./validation/validate_update_contact";
 

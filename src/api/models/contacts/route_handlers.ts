@@ -3,6 +3,7 @@ import byType from "./crud/read/byType";
 import byName from "./crud/read/byName";
 import {Prisma} from "@prisma/client";
 import byId from "./crud/read/byId";
+import touchTimestamp from "../touchTimestamp";
 import createContact from "./crud/create/createContact";
 import updateContact from "./crud/update/updateContact";
 
