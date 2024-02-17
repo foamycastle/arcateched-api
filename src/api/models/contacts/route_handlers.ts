@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import byType from "./crud/read/byType";
 import byName from "./crud/read/byName";
 import byId from "./crud/read/byId";
+import createContact from "./crud/create/createContact";
 
 export function contacts_byType_handler(req:Request, res:Response){
     byType(req.body)
@@ -67,4 +68,12 @@ export function contacts_byId_handler(req:Request,res:Response):void{
             }
         })
 }
+export function contacts_create_handler(req:Request,res:Response):void{
+    createContact(req.body)
+        .then((results)=>{
             res.status(201).json(results)
+        })
+        .catch((error)=>{
+            res.status(500).json(error)
+        })
+}
