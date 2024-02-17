@@ -6,7 +6,7 @@ import byId from "./crud/read/byId";
 import createContact from "./crud/create/createContact";
 import updateContact from "./crud/update/updateContact";
 
-export function contacts_byType_handler(req:Request, res:Response){
+export function contacts_byType_handler(req:Request, res:Response):void{
     byType(req.body)
         .then((results) => {
             if(results.length==0){
