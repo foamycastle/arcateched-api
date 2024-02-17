@@ -118,7 +118,14 @@ export function machine_data_createMachine(req:Request, res:Response):void{
             res.status(201).json(results)
         })
         .catch((error)=>{
-            res.status(500).json(error)
+            if(error instanceof Prisma.PrismaClientValidationError){
+                res.status(400).json({
+                    error:{
+                        "message":error.message,
+                        "cause":error.cause
+                    }
+                })
+            }
         })
 }
 export function machine_data_updateMachine(req:Request,res:Response):void{
