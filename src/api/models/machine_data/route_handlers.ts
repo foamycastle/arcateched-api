@@ -115,7 +115,7 @@ export function machine_data_byGameType_handler(req:Request, res:Response):void{
 export function machine_data_createMachine(req:Request, res:Response):void{
     createMachine(req.body)
         .then((results)=>{
-            res.json(results)
+            res.status(201).json(results)
         })
         .catch((error)=>{
             res.status(500).json(error)
