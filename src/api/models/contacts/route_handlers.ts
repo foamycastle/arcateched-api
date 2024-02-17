@@ -1,6 +1,7 @@
 import {Request, Response} from "express";
 import byType from "./crud/read/byType";
 import byName from "./crud/read/byName";
+import byId from "./crud/read/byId";
 
 export function contacts_byType_handler(req:Request, res:Response){
     byType(req.body)
@@ -43,6 +44,26 @@ export function contacts_byName_handler(req:Request, res:Response):void{
                         }
                     }
                 })
+            }
+        })
+}
+export function contacts_byId_handler(req:Request,res:Response):void{
+    byId(req.params.id)
+        .then((result)=>{
+            touchTimestamp(result.id)
+            res.json(result)
+        })
+        .catch((error)=>{
+            if(error instanceof Prisma.PrismaClientKnownRequestError){
+                if(error.code==="P2025"){
+                    res.status(404).json({
+                        error:{
+                            message:`Could not find contact entry with ID '${req.params.id}'`
+                        }
+                    })
+                }
+            }else{
+                res.status(500).json(error)
             }
         })
 }

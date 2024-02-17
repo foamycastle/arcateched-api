@@ -27,3 +27,12 @@ export const validateContactName=(req:Request,res:Response,next:NextFunction):vo
     next()
 
 }
+export const validateContactId=(req:Request,res:Response,next:NextFunction,state:string):void=>{
+    const findJoi=UUID.validate(state)
+
+    if(findJoi.error){
+        res.status(400).json(findJoi.error)
+        return
+    }
+    next()
+}
