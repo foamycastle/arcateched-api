@@ -1,11 +1,14 @@
 import {Request, Response} from "express";
-import names from "./crud/read/names";
-import byId from "./crud/read/byId";
-import touchTimestamp from "../../../CRUD/touchTimestamp";
-import byOpState from "./crud/read/byOpstate";
-import read_byGameType from "./crud/read/byGameType";
 import {$Enums} from "@prisma/client";
 import {prismaClient} from "../../../prisma/prismaClient";
+import names from "./crud/read/names";
+import byId from "./crud/read/byId";
+import touchTimestamp from "../touchTimestamp";
+import byOpState from "./crud/read/byOpstate";
+import read_byGameType from "./crud/read/byGameType";
+import {machine_data_create} from "./route_definitions";
+import createMachine from "./crud/create/createMachine";
+import updateMachine from "./crud/update/updateMachine";
 
 export function machine_data_names_handler(req:Request, res:Response):void {
     names()
@@ -107,6 +110,24 @@ export function machine_data_byGameType_handler(req:Request, res:Response):void{
         })
         .catch((error)=> {
             console.log(error)
+            res.status(500).json(error)
+        })
+}
+export function machine_data_createMachine(req:Request, res:Response):void{
+    createMachine(req.body)
+        .then((results)=>{
+            res.json(results)
+        })
+        .catch((error)=>{
+            res.status(500).json(error)
+        })
+}
+export function machine_data_updateMachine(req:Request,res:Response):void{
+    updateMachine(req.body)
+        .then((results)=>{
+            res.json(results)
+        })
+        .catch((error)=>{
             res.status(500).json(error)
         })
 }

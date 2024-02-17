@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
-import read_getContactType from "../../../CRUD/contacts/read_getContactType";
+import byType from "./crud/read/byType";
 
-export function contactsByTypeHandler(req:Request,res:Response){
-    read_getContactType(req.body)
+export function contacts_byType_handler(req:Request, res:Response){
+    byType(req.body)
         .then((results) => {
             if(results.length==0){
                 res

@@ -1,5 +1,5 @@
 import Joi from "joi";
-import {UUID} from "../UUID";
+import {UUID} from "../../../../validation/schemas/UUID";
 import Prisma from "@prisma/client";
 import {gameType} from "./gameType";
 import {opState} from "./opState";

@@ -1,6 +1,6 @@
 import Joi from "joi";
 import Prisma from "@prisma/client";
-import {UUID} from "../UUID";
+import {UUID} from "../../../../validation/schemas/UUID";
 
 export const todo =
     Joi.object<Prisma.Prisma.todoCreateOrConnectWithoutMachine_dataInput>({
