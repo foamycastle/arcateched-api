@@ -30,6 +30,7 @@ export const machine_dataCreateValidationSchema=
         gameType:gameType,
         occupied:Joi.number().precision(3),
         opState:opState,
+        playerCount:Joi.number().min(1).max(6).integer().optional(),
 
         contacts:contacts.optional(),
         attachments:attachments.optional(),
