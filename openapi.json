@@ -1,0 +1,292 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Arcateched API",
+    "description": "This document describes the API endpoints specified on an Arcateched server",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "id": {
+        "title": "UUID Primary Key",
+        "description": "A UUID string that identifies an object",
+        "type": "string"
+      },
+      "timestampObject": {
+        "title": "Timestamp Object",
+        "description": "An object containing timing metadata",
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/id"
+          },
+          "createdAt": {},
+          "createdBy": {},
+          "modifiedAt": {},
+          "modifiedBy": {},
+          "openedAt": {},
+          "openedBy": {},
+          "resolvedAt": {},
+          "resolvedBy": {},
+          "assignedAt": {},
+          "assignedBy": {},
+          "completedAt": {},
+          "completedBy": {},
+          "removedAt": {},
+          "removedBy": {},
+          "enteredAt": {},
+          "enteredBy": {},
+          "lastLogin": {},
+          "goalBegin": {},
+          "goalExpCom": {},
+          "replacedAt": {},
+          "replacedBy": {},
+          "lastAccess": {},
+          "lastAccessBy": {}
+        }
+      },
+      "machine_data_model_scalars": {
+        "title": "Machine Data Model Scalar Values",
+        "description": "The scalar values contained in the machine_data model",
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Machine Name",
+            "description": "The name to which the machine is commonly referred",
+            "type": "string",
+            "required": true
+          },
+          "modelNumber": {
+            "title": "Model Number",
+            "description": "A manufacturer-supplied identification of the model of the machine",
+            "type": "string",
+            "required": false
+          },
+          "serialNumber": {
+            "title": "Serial Number",
+            "description": "A unique manufacturer-supplied string that marks the machine",
+            "type": "string",
+            "required": true
+          },
+          "dateOfMfg": {
+            "title": "Date of Manufacture",
+            "description": "The date of manufacture marked on the machine, if any",
+            "type": "string",
+            "required": false
+          },
+          "dateEnter": {
+            "title": "Date Entered",
+            "description": "The date on which the machine data was enter into the database",
+            "type": "string",
+            "required": false
+          },
+          "dateExit": {
+            "title": "Date Exited",
+            "description": "The date on which the machine was removed from service, if any",
+            "type": "string",
+            "required": false
+          },
+          "playerCount": {
+            "title": "Player Count",
+            "description": "The number of players the game can accommodate simultaneously",
+            "type": "integer",
+            "required": false,
+            "minimum": 1,
+            "maximum": 6
+          },
+          "gameType": {
+            "title": "Game Type",
+            "description": "The type of game play",
+            "type": "array",
+            "enum": [
+              "Video",
+              "Redemption",
+              "Merch",
+              "Crane",
+              "Ticket",
+              "Pusher",
+              "Skill"
+            ],
+            "required": false
+          },
+          "occupied": {
+            "title": "Occupied floor space",
+            "description": "A number representing the number of square feet a machine occupies",
+            "type": "number",
+            "format": "float",
+            "required": false
+          },
+          "opState": {
+            "title": "Operational State",
+            "description": "A string that describes the operational state of the machine",
+            "type": "string",
+            "enum": [
+              "Up",
+              "Down",
+              "Repair",
+              "Off_Floor",
+              "Sold"
+            ],
+            "required": false
+          }
+        }
+      },
+      "machine_data_model_readonly": {
+        "title": "Machine Data Model UUID Fields",
+        "description": "These fields in the machine data contain UUID strings that link to other objects and are not directly writable",
+        "readOnly": true,
+        "properties": {
+          "cKey": {
+            "title": "Cabinet Key Identifier",
+            "description": "A UUID string that links to the 'cabinet key' object. The cabinet key is used to open the cabinet of the machine",
+            "type": "string",
+            "required": false
+          },
+          "sKey": {
+            "title": "Service Key Identifier",
+            "description": "A UUID string that links to the 'service key' object.  The service key is used to open a service door on the machine.",
+            "type": "string",
+            "required": false
+          },
+          "gameZone": {
+            "title": "Game Zone Identifier",
+            "description": "A UUID string that identifies the object describing the physical space that the machine occupies",
+            "type": "string",
+            "required": false
+          },
+          "mfgUUID": {
+            "title": "Manufacturer Identifier",
+            "description": "A UUID string that links to an object in the contacts table, representing the manufacturer of the machine",
+            "type": "string",
+            "required": false
+          },
+          "timestamp": {
+            "title": "Timestamp Identifier",
+            "description": "A UUID string that links to an object in the timestamp table, representing an object that contains timing metadata",
+            "type": "string",
+            "required": false
+          }
+        }
+      },
+      "machine_data_model_1toMany": {
+        "title": "Machine Data Model One-to-Many Relational Fields",
+        "description": "Fields that contain arrays of objects from other schemas.  These fields share relations with the Machine Data model",
+        "properties": {
+          "attachments": {
+            "title": "Related Attachments",
+            "description": "An array of objects stored in the attachments table that are related to the specified machine_data object",
+            "required": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "comments": {
+            "title": "Related Comments",
+            "description": "An array of objects stored in the comments table that are related to the specified machine_data object",
+            "required": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "issues": {
+            "title": "Related Issues",
+            "description": "An array of objects stored in the Issues table that are related to the specified machine_data object",
+            "required": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "todo": {
+            "title": "Related Todo Items",
+            "description": "An array of objects stored in the todo table that are related to the specified machine_data object",
+            "required": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        }
+      },
+      "machine_data_model_1to1": {
+        "title": "Machine Data Model One-to-One Relational Fields",
+        "description": "Fields that contain a single object from another schema. These fields share relations with the Machine Data model",
+        "properties": {
+          "cabinetKey": {
+            "title": "Cabinet Key Object",
+            "description": "An object stored in the keys table",
+            "type": "object",
+            "required": false,
+            "properties": {
+
+            }
+          },
+          "serviceKey": {
+            "title": "Service Key Object",
+            "description": "An object stored in the keys table",
+            "type": "object",
+            "required": false,
+            "properties": {
+
+            }
+          },
+          "machine_zones": {
+            "title": "Machine Zone Object",
+            "description": "An object stored in the machine_zones table",
+            "type": "object",
+            "required": false,
+            "properties": {
+
+            }
+          },
+          "contacts": {
+            "title": "Manufacturer Object",
+            "description": "An object stored in the contacts table",
+            "type": "object",
+            "required": false,
+            "properties": {
+
+            }
+          },
+          "timestampObject": {
+            "title": "Timestamp Object",
+            "description": "An object stored in the timestamp table that contains timing metadata",
+            "type": "object",
+            "required": false,
+            "properties": {
+
+            }
+          }
+        }
+      },
+      "machine_data_model": {
+        "title": "The composed machine_data model",
+        "description": "The entire machine_data model composed of its constituent schemas",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/machine_data_model_scalars"
+          },
+          {
+            "$ref": "#/components/schemas/machine_data_model_readonly"
+          },
+          {
+            "$ref": "#/components/schemas/machine_data_model_1to1"
+          },
+          {
+            "$ref": "#/components/schemas/machine_data_model_1toMany"
+          }
+        ]
+      },
+      "machine_data_response"
+    }
+  },
+  "paths": {
+  }
+}
