@@ -4,6 +4,7 @@ import byName from "./crud/read/byName";
 import {Prisma} from "@prisma/client";
 import byId from "./crud/read/byId";
 import createContact from "./crud/create/createContact";
+import updateContact from "./crud/update/updateContact";
 
 export function contacts_byType_handler(req:Request, res:Response){
     byType(req.body)
@@ -73,6 +74,15 @@ export function contacts_create_handler(req:Request,res:Response):void{
     createContact(req.body)
         .then((results)=>{
             res.status(201).json(results)
+        })
+        .catch((error)=>{
+            res.status(500).json(error)
+        })
+}
+export function contacts_update_handler(req:Request,res:Response):void{
+    updateContact(req.body)
+        .then((results)=>{
+            res.json(results)
         })
         .catch((error)=>{
             res.status(500).json(error)
