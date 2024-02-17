@@ -8,6 +8,7 @@ contacts_router.param("id",Validation.validateContactId)
 
 contacts_router.use(RouteDef.contacts_byType,Validation.validateContactType)
 contacts_router.use(RouteDef.contacts_byName,Validation.validateContactName)
+contacts_router.use(RouteDef.contacts_create,Validation.validateNewContact)
 contacts_router.use(RouteDef.contacts_update,Validation.validateUpdateContact)
 
 contacts_router.get(RouteDef.contacts_byType,RouteHandler.contacts_byType_handler)
