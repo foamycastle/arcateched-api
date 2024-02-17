@@ -160,12 +160,12 @@ model machine_data {
   attachments     attachments[]
   comments        comments[]
   issues          issues[]
+  todo            todo[]
   cabinetKey      keys?          @relation("machine_data_cabinetKeyTokeys", fields: [cKey], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cabinetKey_fkey")
   machine_zones   machine_zones? @relation(fields: [gameZone], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "gameZone_fkey")
   contacts        contacts?      @relation(fields: [mfgUUID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "manufacturerID")
   serviceKey      keys?          @relation("machine_data_serviceKeyTokeys", fields: [sKey], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "serviceKey_fkey")
   timestampObject timestamp?     @relation("machine_data_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestamp")
-  todo            todo[]
 
   @@index([mfgUUID], map: "fki_manufacturerID")
   @@index([timestamp], map: "fki_timestamp")
