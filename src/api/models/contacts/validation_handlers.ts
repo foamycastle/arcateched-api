@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {contactType} from "./validation/contactType";
+import {validate_new_contact} from "./validation/validate_new_contact";
 import {validate_update_contact} from "./validation/validate_update_contact";
 
 export const validateContactType=(req:Request,res:Response,next:NextFunction)=>{
