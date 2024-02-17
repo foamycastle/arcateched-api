@@ -1,6 +1,5 @@
 import Joi from "joi";
 import {Prisma} from "@prisma/client";
-import {UUID} from "../../../../validation/schemas/UUID";
 
 export const attachments = Joi.object<Prisma.attachmentsCreateNestedManyWithoutMachine_dataInput>({
     create:Joi.object().optional(),

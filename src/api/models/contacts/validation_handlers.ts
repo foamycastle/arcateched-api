@@ -1,7 +1,5 @@
 import {NextFunction, Request, Response} from "express";
 import {contactType} from "../../../validation/schemas/enums/contactType";
-import Prisma from "@prisma/client";
-import Joi from "joi";
 
 export const validateContactType=(req:Request,res:Response,next:NextFunction)=>{
 

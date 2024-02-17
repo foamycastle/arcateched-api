@@ -1,6 +1,5 @@
 import Joi from "joi";
 import Prisma from "@prisma/client";
-import {UUID} from "../../../../validation/schemas/UUID";
 
 export const comments =
     Joi.object<Prisma.Prisma.commentsCreateNestedManyWithoutMachine_dataInput>({

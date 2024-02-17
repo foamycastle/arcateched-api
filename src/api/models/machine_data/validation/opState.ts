@@ -1,5 +1,5 @@
 import Joi from "joi";
-import Prisma, {$Enums} from "@prisma/client";
+import {$Enums} from "@prisma/client";
 
 export function opState<T>() {
     return Joi.array()
