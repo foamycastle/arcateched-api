@@ -8,7 +8,8 @@ export default async function (state:Prisma.opState){
         },
         select:{
             id:true,
-            name:true
+            name:true,
+            opState:true
         }
     })
 }
