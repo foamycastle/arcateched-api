@@ -17,6 +17,12 @@
         "description": "A UUID string that identifies an object",
         "type": "string"
       },
+      "machine_data_field_name": {
+        "title": "Machine Name",
+        "description": "The name to which the machine is commonly referred",
+        "type": "string",
+        "required": true
+      },
       "timestampObject": {
         "title": "Timestamp Object",
         "description": "An object containing timing metadata",
@@ -25,29 +31,121 @@
           "id": {
             "$ref": "#/components/schemas/id"
           },
-          "createdAt": {},
-          "createdBy": {},
-          "modifiedAt": {},
-          "modifiedBy": {},
-          "openedAt": {},
-          "openedBy": {},
-          "resolvedAt": {},
-          "resolvedBy": {},
-          "assignedAt": {},
-          "assignedBy": {},
-          "completedAt": {},
-          "completedBy": {},
-          "removedAt": {},
-          "removedBy": {},
-          "enteredAt": {},
-          "enteredBy": {},
-          "lastLogin": {},
-          "goalBegin": {},
-          "goalExpCom": {},
-          "replacedAt": {},
-          "replacedBy": {},
-          "lastAccess": {},
-          "lastAccessBy": {}
+          "createdAt": {
+            "description": "timestamp value of when an object was created",
+            "type": "string",
+            "required": false
+          },
+          "createdBy": {
+            "description": "User object related to the action",
+            "type": "string",
+            "required": false
+          },
+          "modifiedAt": {
+            "description": "timestamp of when an object was modified",
+            "type": "string",
+            "required": false
+          },
+          "modifiedBy": {
+            "description": "User object related to the action",
+            "type": "string",
+            "required": false
+          },
+          "openedAt": {
+            "description": "timestamp value of when an issues was opened",
+            "type": "string",
+            "required": false
+          },
+          "openedBy": {
+            "description": "User object related to the action",
+            "type": "string",
+            "required": false
+          },
+          "resolvedAt": {
+            "description": "timestamp value of when an issues was resolved",
+            "type": "string",
+            "required": false
+          },
+          "resolvedBy": {
+            "description": "User object related to the action",
+            "type": "string",
+            "required": false
+          },
+          "assignedAt": {
+            "description": "timestamp value of when a todo item was assigned",
+            "type": "string",
+            "required": false
+          },
+          "assignedBy": {
+            "description": "User object related to the action",
+            "type": "string",
+            "required": false
+          },
+          "completedAt": {
+            "description": "timestamp value of when an a todo item was completed",
+            "type": "string",
+            "required": false
+          },
+          "completedBy": {
+            "description": "User object related to the action",
+            "type": "string",
+            "required": false
+          },
+          "removedAt": {
+            "description": "timestamp value of when an object was soft-deleted",
+            "type": "string",
+            "required": false
+          },
+          "removedBy": {
+            "description": "User object related to the action",
+            "type": "string",
+            "required": false
+          },
+          "enteredAt": {
+            "description": "timestamp value of when an issues was opened",
+            "type": "string",
+            "required": false
+          },
+          "enteredBy": {
+            "description": "User object related to the action",
+            "type": "string",
+            "required": false
+          },
+          "lastLogin": {
+            "description": "timestamp of a user's previous login",
+            "type": "string",
+            "required": false
+          },
+          "goalBegin": {
+            "description": "timestamp of a todo item's beginning",
+            "type": "string",
+            "required": false
+          },
+          "goalExpCom": {
+            "description": "timestamp of a todo expected completion",
+            "type": "string",
+            "required": false
+          },
+          "replacedAt": {
+            "description": "timestamp value of when an issues was opened",
+            "type": "string",
+            "required": false
+          },
+          "replacedBy": {
+            "description": "User object related to the action",
+            "type": "string",
+            "required": false
+          },
+          "lastAccess": {
+            "description": "timestamp value of when a object was previously accessed",
+            "type": "string",
+            "required": false
+          },
+          "lastAccessBy": {
+            "description": "User object related to the action",
+            "type": "string",
+            "required": false
+          }
         }
       },
       "machine_data_model_scalars": {
@@ -56,10 +154,7 @@
         "type": "object",
         "properties": {
           "name": {
-            "title": "Machine Name",
-            "description": "The name to which the machine is commonly referred",
-            "type": "string",
-            "required": true
+            "$ref": "#/components/schemas/machine_data_field_name"
           },
           "modelNumber": {
             "title": "Model Number",
@@ -284,7 +379,40 @@
           }
         ]
       },
-      "machine_data_response"
+      "machine_data_response_name_only": {
+        "description": "Response given to a request for machine_data names",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/machine_data_model_scalars"
+          }
+        ]
+      },
+      "machine_data_response_byGameType": {
+        "description": "Response given to a request for machine_data by byGameType",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/machine_data_model_scalars"
+          }
+        ]
+      },
+      "machine_data_response_byId": {
+        "description": "Response given to a request for machine_data by byGameType",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/machine_data_model_scalars"
+          },
+          {
+            "$ref": "#/components/schemas/machine_data_model_1toMany"
+          },
+          {
+            "$ref": "#/components/schemas/machine_data_model_1to1"
+          },
+          {
+            "$ref": "#/components/schemas/machine_data_model_readonly"
+          }
+        ]
+      },
+
     }
   },
   "paths": {
