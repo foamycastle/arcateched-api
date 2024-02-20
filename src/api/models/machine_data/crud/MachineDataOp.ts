@@ -1,7 +1,7 @@
 import {prismaClientEventType, PrismaQueryOp} from "../../../PrismaQueryOp";
 import {PrismaClient} from "@prisma/client";
 import {ArcatechedAPIRuntimeError} from "../../../../errorObjects/ArcatechedAPIRuntimeError";
-import {NextFunction, Request, Response} from "express";
+import e, {NextFunction, Request, Response} from "express";
 import {NoResultsError} from "../../../../errorObjects/NoResultsError";
 import {JoiValidationError} from "../errorObjects/JoiValidationError";
 
