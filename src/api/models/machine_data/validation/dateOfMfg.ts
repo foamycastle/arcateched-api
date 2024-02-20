@@ -27,7 +27,4 @@ export function dateOfMfgWithSearchMethodObject(): Joi.ObjectSchema {
                 .max(1)
                 .optional()
         })
-        .append({
-
-        })
 }
