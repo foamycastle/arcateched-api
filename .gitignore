@@ -4,3 +4,4 @@ dist
 .env
 .gitignore
 package-lock.json
+.idea
