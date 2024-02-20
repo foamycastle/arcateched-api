@@ -1,11 +1,8 @@
 import {MachineDataOp} from "../MachineDataOp";
 import {NextFunction, Request, Response} from "express";
-import {ArcatechedAPIRuntimeError} from "../../../../../errorObjects/ArcatechedAPIRuntimeError";
 import Joi from "joi";
-import {UUID} from "../../../../../validation/schemas/UUID";
 import {JoiValidationError} from "../../errorObjects/JoiValidationError";
-import {NoResultsError} from "../../../../../errorObjects/NoResultsError";
-import {nameRequired, nameWithSearchMethodObject} from "../../validation/name";
+import {nameWithSearchMethodObject} from "../../validation/name";
 
 interface extendRequest extends Request {
     validationResult: Joi.ValidationResult

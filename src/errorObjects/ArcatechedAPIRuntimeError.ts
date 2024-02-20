@@ -1,5 +1,3 @@
-import Joi from "joi";
-
 export type ErrorResponseType={
     message:string,
     errorType?:string,

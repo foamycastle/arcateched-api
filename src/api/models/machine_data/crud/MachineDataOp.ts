@@ -1,7 +1,7 @@
 import {prismaClientEventType, PrismaQueryOp} from "../../../PrismaQueryOp";
 import {PrismaClient} from "@prisma/client";
 import {ArcatechedAPIRuntimeError} from "../../../../errorObjects/ArcatechedAPIRuntimeError";
-import e, {NextFunction, Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
 import {NoResultsError} from "../../../../errorObjects/NoResultsError";
 import {JoiValidationError} from "../errorObjects/JoiValidationError";
 
@@ -63,14 +63,7 @@ export abstract class MachineDataOp extends PrismaQueryOp{
 
     protected resultsHandler(results: object) {
     }
-    queryPrep(): (req: e.Request, res: e.Response, next: e.NextFunction) => void {
-        return function (p1: e.Request, p2: e.Response, p3: e.NextFunction) {
-        };
-    }
 
-    validationHandler(): (req: e.Request, res: e.Response, next: e.NextFunction) => void {
-        return function (p1: e.Request, p2: e.Response, p3: e.NextFunction) {
-        };
-    }
+
 
 }

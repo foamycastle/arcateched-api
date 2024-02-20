@@ -47,7 +47,7 @@ export abstract class PrismaQueryOp implements queryOpContract {
 
     protected touchTimestamp(idArray: string[]) {
         let transactionArray: Prisma.PrismaPromise<any>[] = []
-        idArray.forEach((id: string, index: number, a: string[]) => {
+        idArray.forEach((id: string) => {
             transactionArray.push(
                 this.prismaClient[this.model].update({
                     where: {
@@ -71,7 +71,7 @@ export abstract class PrismaQueryOp implements queryOpContract {
         })
         this.prismaClient.$transaction(transactionArray)
             .then((results) => {
-                console.log('Timestamp touched')
+                console.log(`${results.length} ${results.length>1?'Timestamps':'Timestamp'} touched`)
             })
     }
 
