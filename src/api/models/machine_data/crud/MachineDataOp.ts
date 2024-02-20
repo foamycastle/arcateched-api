@@ -63,7 +63,14 @@ export abstract class MachineDataOp extends PrismaQueryOp{
 
     protected resultsHandler(results: object) {
     }
-
+    queryPrep(): (req: e.Request, res: e.Response, next: e.NextFunction) => void {
+        return function (p1: e.Request, p2: e.Response, p3: e.NextFunction) {
+        };
+    }
+    validationHandler(): (req: e.Request, res: e.Response, next: e.NextFunction) => void {
+        return function (p1: e.Request, p2: e.Response, p3: e.NextFunction) {
+        };
+    }
 
 
 }
