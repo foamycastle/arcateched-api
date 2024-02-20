@@ -36,6 +36,7 @@ export class findDateOfMfg extends MachineDataOp {
             req.validationResult = dateOfMfgWithSearchMethodObject().validate(req.body)
             if (req.validationResult.error) {
                 next(new JoiValidationError(req.validationResult.error.message, req.validationResult.error, 400))
+                return
             }
 
             next()
