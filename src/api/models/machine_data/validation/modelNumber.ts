@@ -14,7 +14,7 @@ export function modelNumberObject(required: boolean): Joi.ObjectSchema {
     return Joi.object({
         modelNumber: (
             required
-                ? modelNumberRequired()
+                ? modelNumber().required()
                 : modelNumber()
         )
     })

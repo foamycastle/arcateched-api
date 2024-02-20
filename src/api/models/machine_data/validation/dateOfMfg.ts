@@ -13,7 +13,7 @@ export function dateOfMfgObject(required: boolean): Joi.ObjectSchema {
     return Joi.object({
         dateOfMfg: (
             required
-                ? dateOfMfgRequired()
+                ? dateOfMfg().required()
                 : dateOfMfg()
         )
     })

@@ -13,7 +13,7 @@ export function serialNumberObject(required:boolean):Joi.ObjectSchema{
     return Joi.object({
         serialNumber:(
             required
-                ? serialNumberRequired()
+                ? serialNumber().required()
                 : serialNumber()
         )
     })

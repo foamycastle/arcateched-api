@@ -12,7 +12,7 @@ export function nameObject(required:boolean):Joi.ObjectSchema{
     return Joi.object({
         name: (
             required
-                ? nameRequired()
+                ? name().required()
                 : name()
         )
     })
