@@ -1,21 +1,74 @@
-import * as RouteHandler from './route_handlers'
 import * as RouteDef from './route_definitions'
-import * as Validation from './validation_handlers'
-
+import {getAllMachineNames} from "./crud/read/getAllMachineNames";
+import {getMachineById} from "./crud/read/getMachineById";
+import {getMachineByType} from "./crud/read/getMachineByType";
+import {getMachineByOpState} from "./crud/read/getMachineByOpState";
+import { findSerialNumber } from './crud/read/findSerialNumber';
+import {findName} from "./crud/read/findName";
+import {findModelNumber} from "./crud/read/findModelNumber";
+import {findDateOfMfg} from "./crud/read/findDateOfMfg";
 const express = require('express')
 export const machine_data_router = express.Router()
 
-machine_data_router.param('opState',Validation.validateOpState)
+const getAll= new getAllMachineNames(RouteDef.names)
+machine_data_router.get(RouteDef.names,[
+    getAll.routeHandler(),
+    getAll.errorHandler()
+])
 
-machine_data_router.use(RouteDef.machine_data_byId, Validation.machine_id_array)
-machine_data_router.use(RouteDef.machine_data_byGameType,Validation.validateGameType)
-machine_data_router.use(RouteDef.machine_data_create,Validation.validateCreateMachine_Data)
+const ById = new getMachineById(RouteDef.byId)
+machine_data_router.get(RouteDef.byId,[
+    ById.validationHandler(),
+    ById.queryPrep(),
+    ById.routeHandler(),
+    ById.errorHandler()
+])
 
-machine_data_router.get(RouteDef.machine_data_names, RouteHandler.machine_data_names_handler)
-machine_data_router.get(RouteDef.machine_data_byId, RouteHandler.machine_data_byId_handler)
-machine_data_router.get(RouteDef.machine_data_opState, RouteHandler.machine_data_byOpState_handler)
-machine_data_router.get(RouteDef.machine_data_byGameType,RouteHandler.machine_data_byGameType_handler)
+const ByType = new getMachineByType(RouteDef.byGameType)
+machine_data_router.get(RouteDef.byGameType,[
+    ByType.validationHandler(),
+    ByType.queryPrep(),
+    ByType.routeHandler(),
+    ByType.errorHandler()
+])
 
-machine_data_router.post(RouteDef.machine_data_create,RouteHandler.machine_data_createMachine)
-machine_data_router.put(RouteDef.machine_data_update,RouteHandler.machine_data_updateMachine)
+const ByOpState = new getMachineByOpState(RouteDef.opState)
+machine_data_router.get(RouteDef.opState,[
+    ByOpState.validationHandler(),
+    ByOpState.queryPrep(),
+    ByOpState.routeHandler(),
+    ByOpState.errorHandler()
+])
+
+const serialNumber = new findSerialNumber(RouteDef.findSerialNumber)
+machine_data_router.get(RouteDef.findSerialNumber,[
+    serialNumber.validationHandler(),
+    serialNumber.queryPrep(),
+    serialNumber.routeHandler(),
+    serialNumber.errorHandler()
+])
+
+const name = new findName(RouteDef.findName)
+machine_data_router.get(RouteDef.findName,[
+    name.validationHandler(),
+    name.queryPrep(),
+    name.routeHandler(),
+    name.errorHandler()
+])
+
+const modelNumber = new findModelNumber(RouteDef.findModelNumber)
+machine_data_router.get(RouteDef.findModelNumber,[
+    modelNumber.validationHandler(),
+    modelNumber.queryPrep(),
+    modelNumber.routeHandler(),
+    modelNumber.errorHandler()
+])
+
+const dateOfMfg = new findDateOfMfg(RouteDef.findDateOfMfg)
+machine_data_router.get(RouteDef.findDateOfMfg,[
+    dateOfMfg.validationHandler(),
+    dateOfMfg.queryPrep(),
+    dateOfMfg.routeHandler(),
+    dateOfMfg.errorHandler()
+])
 

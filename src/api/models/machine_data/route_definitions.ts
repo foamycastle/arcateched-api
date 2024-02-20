@@ -1,7 +1,11 @@
 export const machine_data_root: string = '/machine_data'
-export const machine_data_names: string = '/names';
-export const machine_data_byId: string = '/byId';
-export const machine_data_opState: string = '/opState/:opState';
-export const machine_data_byGameType: string = '/byType';
+export const names: string = '/names';
+export const byId: string = '/byId';
+export const opState: string = '/opState';
+export const byGameType: string = '/byType';
+export const findSerialNumber: string = '/findSerialNumber';
+export const findName: string = '/findName';
+export const findModelNumber: string = '/findModelNumber';
+export const findDateOfMfg: string = '/findDateOfMfg';
 export const machine_data_create:string = "/create"
 export const machine_data_update:string = "/update"

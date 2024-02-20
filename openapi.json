@@ -23,6 +23,32 @@
         "type": "string",
         "required": true
       },
+      "machine_data_opState": {
+        "title": "Operational State",
+        "description": "A string that describes the operational state of the machine",
+        "type": "string",
+        "enum": [
+          "Up",
+          "Down",
+          "Repair",
+          "Off_Floor",
+          "Sold"
+        ]
+      },
+      "machine_data_gameType": {
+        "title": "Game Type",
+        "description": "The type of game play",
+        "type": "array",
+        "enum": [
+          "Video",
+          "Redemption",
+          "Merch",
+          "Crane",
+          "Ticket",
+          "Pusher",
+          "Skill"
+        ]
+      },
       "timestampObject": {
         "title": "Timestamp Object",
         "description": "An object containing timing metadata",
@@ -194,21 +220,6 @@
             "minimum": 1,
             "maximum": 6
           },
-          "gameType": {
-            "title": "Game Type",
-            "description": "The type of game play",
-            "type": "array",
-            "enum": [
-              "Video",
-              "Redemption",
-              "Merch",
-              "Crane",
-              "Ticket",
-              "Pusher",
-              "Skill"
-            ],
-            "required": false
-          },
           "occupied": {
             "title": "Occupied floor space",
             "description": "A number representing the number of square feet a machine occupies",
@@ -217,17 +228,10 @@
             "required": false
           },
           "opState": {
-            "title": "Operational State",
-            "description": "A string that describes the operational state of the machine",
-            "type": "string",
-            "enum": [
-              "Up",
-              "Down",
-              "Repair",
-              "Off_Floor",
-              "Sold"
-            ],
-            "required": false
+            "$ref": "#/components/schemas/machine_data_opState"
+          },
+          "gameType": {
+            "$ref": "#/components/schemas/machine_data_gameType"
           }
         }
       },
@@ -387,6 +391,14 @@
           }
         ]
       },
+      "machine_data_response_opState": {
+        "description": "Response given to a request for machine_data names",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/machine_data_model_scalars"
+          }
+        ]
+      },
       "machine_data_response_byGameType": {
         "description": "Response given to a request for machine_data by byGameType",
         "allOf": [
@@ -411,10 +423,69 @@
             "$ref": "#/components/schemas/machine_data_model_readonly"
           }
         ]
-      },
-
+      }
     }
   },
   "paths": {
+    "/models/machine_data/names": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Returns the name of all machines in the machine_data table",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/id"
+                      },
+                      {
+                        "$ref": "#/components/schemas/machine_data_field_name"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "A server error, presumably a database access error or a runtime error on the server"
+
+          }
+        }
+      }
+    },
+    "/models/machine_data/byId": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Returns a single row or a many rows of machine_data with associated objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/id"
+                      },
+                      {
+                        "$ref": "#/components/schemas/machine_data_field_name"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "A server error, presumably a database access error or a runtime error on the server"
+
+          }
+        }
+      }
+    }
   }
 }
