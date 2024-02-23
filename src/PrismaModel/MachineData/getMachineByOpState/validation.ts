@@ -6,10 +6,10 @@ const inputValidation=
         .items(
             Joi.string()
                 .valid(
-                    Array.of(Prisma.$Enums.opState)
+                    ...Object.keys(Prisma.$Enums.opState)
                 )
         )
-        .unique()
+        .min(1)
         .max(4)
 
 export default inputValidation;

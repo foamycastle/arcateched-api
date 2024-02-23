@@ -1,13 +1,10 @@
 import {MachineData} from "../index";
 import {
-    ExpressRouterWare,
     extendedRequest,
     extendedResponse,
     RouterWareFunctions
-} from "../../../PrismaModel";
+} from "../../index";
 import {NextFunction} from "express";
-import Joi from "joi";
-import Prisma from "@prisma/client"
 import preparedQuery from "./preparedQuery";
 import inputValidation from "./validation";
 import {MalformedRequest} from "../../../ArcatechedError/BadRequest/MalformedRequest";
@@ -20,6 +17,7 @@ export default class getMachinesByOpState extends MachineData {
     constructor() {
         super();
         this.opName = 'getMachinesByOpState'
+        this.preparedQuery=preparedQuery
     }
 
     get stack(): RouterWareFunctions {
@@ -69,6 +67,11 @@ export default class getMachinesByOpState extends MachineData {
                     if(results.length===0){
                         throw new NoResultsFound("No results found")
                     }
+                    response.processedResults=results
+                    next()
+                })
+                .catch((error)=>{
+                    console.log(error)
                 })
         }
     }

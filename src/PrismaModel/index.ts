@@ -1,34 +1,18 @@
 import {Prisma, PrismaClient} from "@prisma/client";
-import {DefaultArgs, ExtensionArgs, InternalArgs} from "@prisma/client/runtime/library";
 import {NextFunction, Request, Response} from "express";
 import Joi from "joi";
+import {ArcatechedErrorInterface} from "../ArcatechedError";
 
 
 export interface extendedRequest extends Request {
     validationResult:Joi.ValidationResult
     transactionArray:Prisma.PrismaPromise<any>[]
-    preparedQueryObject:any
+    preparedQuery:any
 }
 export interface extendedResponse extends Response {
     queryResult:Prisma.PrismaPromise<any>
     processedResults:any
 }
-
-export type PrismaModelTypes =
-    Prisma.attachmentsDelegate<DefaultArgs> |
-    Prisma.commentsDelegate<DefaultArgs> |
-    Prisma.contactsDelegate<DefaultArgs> |
-    Prisma.contacts_addressesDelegate<DefaultArgs> |
-    Prisma.contacts_internetDelegate<DefaultArgs> |
-    Prisma.contacts_phoneDelegate<DefaultArgs> |
-    Prisma.issuesDelegate<DefaultArgs> |
-    Prisma.issues_problem_tagsDelegate<DefaultArgs> |
-    Prisma.keysDelegate<DefaultArgs> |
-    Prisma.machine_dataDelegate<DefaultArgs> |
-    Prisma.machine_zonesDelegate<DefaultArgs> |
-    Prisma.todoDelegate<DefaultArgs> |
-    Prisma.timestampDelegate<DefaultArgs> |
-    Prisma.usersDelegate<DefaultArgs>
 
 export type PrismaTimestampTouch = {
     timestampObject:{
@@ -62,7 +46,7 @@ export interface ExpressRouterWare{
     errorHandler():(err:any,request: extendedRequest, response: extendedResponse, next: NextFunction)=>void;
 }
 
-export abstract class PrismaModel {
+export abstract class PrismaModel implements ExpressRouterWare{
 
     protected prismaClient:PrismaClient
     protected prismaModel:any
@@ -70,6 +54,13 @@ export abstract class PrismaModel {
     constructor(){
         this.prismaClient = new PrismaClient()
     }
+
+    abstract inputValidation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void
+    abstract queryPreparation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void
+    abstract databaseOperation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void
+    abstract resultProcessor(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void
+    abstract resultEmitter(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void
+    abstract errorHandler(): (err: ArcatechedErrorInterface, request: extendedRequest, response: extendedResponse, next: NextFunction) => void
 
     touchTimestamp(idList:string[], operation:'create'|'delete'|'update'|'read'):void{
         let promiseStack:Prisma.PrismaPromise<any>[]=[]

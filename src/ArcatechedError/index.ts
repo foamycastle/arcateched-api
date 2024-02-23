@@ -14,9 +14,9 @@ export type ErrorResponseObject={
     details?:object
 }
 
-export interface ArcatechedErrorInterface{
+export interface ArcatechedErrorInterface extends Error{
     httpCode:400|401|403|404|405|406|411|413|414|500|501|503|505|number
-    message?:string;
+    message:string;
     operation?:ArcatechedOperation
     responseObject:ErrorResponseObject
 }

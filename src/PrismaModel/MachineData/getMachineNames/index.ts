@@ -5,7 +5,7 @@ import {NoResultsFound} from "../../../ArcatechedError/NoResultsFound";
 import {ArcatechedErrorInterface} from "../../../ArcatechedError";
 import preparedQuery from "./preparedQuery";
 
-export default class getMachineNames extends MachineData implements ExpressRouterWare {
+export default class getMachineNames extends MachineData {
 
     opName:string
     constructor() {
@@ -23,20 +23,6 @@ export default class getMachineNames extends MachineData implements ExpressRoute
             this.resultEmitter(),
             this.errorHandler()
         ]
-    }
-
-    inputValidation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName,'inputValidation')
-            next()
-        }
-    }
-
-    queryPreparation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName,'queryPreparation')
-            next()
-        }
     }
 
     databaseOperation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
@@ -62,17 +48,7 @@ export default class getMachineNames extends MachineData implements ExpressRoute
         }
     }
 
-    resultEmitter(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName,'resultEmitter')
 
-            if(response.processedResults.length===0){
-                throw new NoResultsFound("No results found with this operation")
-            }
-
-            response.json(response.processedResults)
-        }
-    }
 
     errorHandler(): (err: ArcatechedErrorInterface, request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return (err: ArcatechedErrorInterface, request: extendedRequest, response: extendedResponse, next: NextFunction) => {
