@@ -1,7 +1,6 @@
 import {MachineData} from "../index";
-import {excludedMethods, ExpressRouterWare, extendedRequest, extendedResponse, RouterWareFunctions} from "../../index";
+import {extendedRequest, extendedResponse, RouterWareFunctions} from "../../index";
 import {NextFunction} from "express";
-import {NoResultsFound} from "../../../ArcatechedError/NoResultsFound";
 import {ArcatechedErrorInterface} from "../../../ArcatechedError";
 import preparedQuery from "./preparedQuery";
 

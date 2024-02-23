@@ -1,5 +1,5 @@
 import {MachineData} from "../index";
-import {extendedRequest, extendedResponse, RouterWareFunctions} from "../../../PrismaModel";
+import {extendedRequest, extendedResponse, RouterWareFunctions} from "../../index";
 import {NextFunction} from "express";
 import {MalformedRequest} from "../../../ArcatechedError/BadRequest/MalformedRequest";
 import preparedQuery from "./preparedQuery";

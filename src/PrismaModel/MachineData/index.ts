@@ -1,5 +1,4 @@
 import {extendedRequest, extendedResponse, PrismaModel} from "../index";
-import {Prisma} from "@prisma/client";
 import {NextFunction} from "express";
 import {NoResultsFound} from "../../ArcatechedError/NoResultsFound";
 import {ArcatechedErrorInterface} from "../../ArcatechedError";
