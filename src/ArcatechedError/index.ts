@@ -22,5 +22,5 @@ export abstract class ArcatechedError extends Error implements ArcatechedErrorIn
     abstract message:string
     abstract operation?:ArcatechedOperation
     abstract httpCode: 400 | 401 | 403 | 404 | 405 | 406 | 411 | 413 | 414 | 500 | 501 | 503 | 505;
-    responseObject: ErrorResponseObject;
+    abstract responseObject: ErrorResponseObject;
 }

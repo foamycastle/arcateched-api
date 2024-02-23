@@ -18,6 +18,7 @@ export default class getMachinesByOpState extends MachineData {
         super();
         this.opName = 'getMachinesByOpState'
         this.preparedQuery=preparedQuery
+        this.validationMethod=inputValidation
     }
 
     get stack(): RouterWareFunctions {
@@ -31,18 +32,6 @@ export default class getMachinesByOpState extends MachineData {
         ]
     }
 
-    inputValidation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName, 'inputValidation')
-            request.validationResult=inputValidation.validate(request.body)
-
-            if(request.validationResult.error){
-                throw new MalformedRequest("The body of request was not valid",request.validationResult.error.details)
-            }
-            next()
-        }
-    }
-
     queryPreparation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
             console.log(this.opName, 'queryPreparation')
@@ -51,29 +40,7 @@ export default class getMachinesByOpState extends MachineData {
         }
     }
 
-    databaseOperation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName, 'databaseOperation')
-            response.queryResult=this.prismaModel.findMany(preparedQuery)
-            next()
-        }
-    }
 
-    resultProcessor(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName, 'resultProcessor')
-            response.queryResult
-                .then((results)=>{
-                    if(results.length===0){
-                        throw new NoResultsFound("No results found")
-                    }
-                    response.processedResults=results
-                    next()
-                })
-                .catch((error)=>{
-                    console.log(error)
-                })
-        }
-    }
+
 
 }

@@ -1,20 +1,20 @@
 import {MachineData} from "../index";
 import {extendedRequest, extendedResponse, RouterWareFunctions} from "../../index";
 import {NextFunction} from "express";
-import {ArcatechedErrorInterface} from "../../../ArcatechedError";
+import inputValidation from "./validation";
 import preparedQuery from "./preparedQuery";
+export default class getMachinesByGameType extends MachineData {
 
-export default class getMachineNames extends MachineData {
+    opName: string
 
-    opName:string
     constructor() {
         super();
-        this.opName='getMachineNames'
-        this.preparedQuery=preparedQuery
+        this.opName = 'getMachinesByGameType'
+        this.preparedQuery = preparedQuery
+        this.validationMethod = inputValidation
     }
 
-    get stack():RouterWareFunctions {
-
+    get stack(): RouterWareFunctions {
         return [
             this.inputValidation(),
             this.queryPreparation(),
@@ -24,9 +24,11 @@ export default class getMachineNames extends MachineData {
             this.errorHandler()
         ]
     }
-    inputValidation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
+
+    queryPreparation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName, 'inputValidation')
+            console.log(this.opName, 'queryPreparation')
+            this.preparedQuery.where.gameType.hasSome=request.validationResult.value
             next()
         }
     }

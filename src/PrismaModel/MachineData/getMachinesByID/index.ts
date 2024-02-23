@@ -12,6 +12,8 @@ export default class getMachinesById extends MachineData {
     constructor() {
         super();
         this.opName = 'getMachinesById'
+        this.preparedQuery=preparedQuery;
+        this.validationMethod=inputValidation;
     }
 
     get stack(): RouterWareFunctions {
@@ -26,43 +28,13 @@ export default class getMachinesById extends MachineData {
         ]
     }
 
-    inputValidation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName, 'inputValidation')
-            /*
-                Sample Input:
-                [
-                    "b9e70284-4589-4e8d-b538-28ceee32a836",
-                    "b9e70284-4589-4e8d-b538-28ceee32a836"
-                ]
-             */
-
-            request.validationResult = inputValidation.validate(request.body)
-
-            if (request.validationResult.error){
-                throw new MalformedRequest(
-                    "The request validation failed",
-                    request.validationResult.error.details
-                    )
-            }
-            next()
-
-        }
-    }
-
     queryPreparation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
             console.log(this.opName, 'queryPreparation')
-            preparedQuery.where.OR = request.validationResult.value.map((recordId:string)=>{return {id: recordId}})
+            this.preparedQuery.where.OR = request.validationResult.value.map((recordId:string)=>{return {id: recordId}})
             next()
         }
     }
-    databaseOperation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName, 'databaseOperation')
-            response.queryResult=this.prismaModel.findMany(preparedQuery)
-            next()
-        }
-    }
+
 
 }
