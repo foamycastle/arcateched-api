@@ -3,7 +3,6 @@ import {NextFunction} from "express";
 import {NoResultsFound} from "../../ArcatechedError/NoResultsFound";
 import {ArcatechedErrorInterface} from "../../ArcatechedError";
 import {MalformedRequest} from "../../ArcatechedError/BadRequest/MalformedRequest";
-import preparedQuery from "./getMachineByOpState/preparedQuery";
 
 
 export abstract class MachineData extends PrismaModel{

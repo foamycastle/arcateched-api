@@ -1,7 +1,6 @@
 import {MachineData} from "../index";
 import {extendedRequest, extendedResponse, RouterWareFunctions} from "../../index";
 import {NextFunction} from "express";
-import {MalformedRequest} from "../../../ArcatechedError/BadRequest/MalformedRequest";
 import preparedQuery from "./preparedQuery";
 import inputValidation from "./validation";
 
