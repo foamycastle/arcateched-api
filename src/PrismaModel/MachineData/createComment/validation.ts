@@ -4,7 +4,7 @@ import * as MachineDataValidation from "../../../validation/model/machine data"
 
 const inputValidation = Joi.object({
     machineId:MachineDataValidation.id,
-    comment:MachineDataValidation.comment
+    content:MachineDataValidation.comment
 })
 
 export default inputValidation
