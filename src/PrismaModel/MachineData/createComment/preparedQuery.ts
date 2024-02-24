@@ -15,6 +15,17 @@ let preparedQuery = Prisma.validator<Prisma.machine_dataUpdateArgs>()({
                 }
             }
         }
+    },
+    select:{
+        id:true,
+        comments:{
+            orderBy:{
+                timestampObject:{
+                    createdAt:'desc'
+                }
+            },
+            take:1
+        }
     }
 })
 export default preparedQuery

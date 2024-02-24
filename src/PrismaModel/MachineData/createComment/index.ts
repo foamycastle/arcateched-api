@@ -1,5 +1,5 @@
 import {MachineData} from "../index";
-import {extendedRequest, extendedResponse, RouterWareFunctions} from "../../index";
+import {extendedRequest, extendedResponse} from "../../index";
 import {NextFunction} from "express";
 import Prisma from "@prisma/client"
 import preparedQuery from "./preparedQuery";
@@ -21,32 +21,25 @@ export default class createComment extends MachineData {
             console.log(this.opName, 'queryPreparation')
 
             const validata=request.validationResult.value
-
+            this.preparedQuery.where.id=validata.machineId
+            this.preparedQuery.data.comment.content = validata.comment
+            next()
         }
     }
 
     databaseOperation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
             console.log(this.opName, 'databaseOperation')
-
-        }
-    }
-
-    resultProcessor(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName, 'resultProcessor')
+            response.queryResult=this.prismaModel.update(this.preparedQuery)
+            next()
         }
     }
 
     resultEmitter(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
             console.log(this.opName, 'resultEmitter')
-        }
-    }
-
-    errorHandler(): (err: any, request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (err: any, request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName, 'errorHandler')
+            response.json(response.processedResults)
+            next()
         }
     }
 }
