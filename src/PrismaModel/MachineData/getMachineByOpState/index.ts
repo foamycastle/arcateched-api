@@ -1,8 +1,7 @@
 import {MachineData} from "../index";
 import {
     extendedRequest,
-    extendedResponse,
-    RouterWareFunctions
+    extendedResponse
 } from "../../index";
 import {NextFunction} from "express";
 import preparedQuery from "./preparedQuery";
@@ -15,19 +14,9 @@ export default class getMachinesByOpState extends MachineData {
     constructor() {
         super();
         this.opName = 'getMachinesByOpState'
+        this.operationType = 'read'
         this.preparedQuery=preparedQuery
         this.validationMethod=inputValidation
-    }
-
-    get stack(): RouterWareFunctions {
-        return [
-            this.inputValidation(),
-            this.queryPreparation(),
-            this.databaseOperation(),
-            this.resultProcessor(),
-            this.resultEmitter(),
-            this.errorHandler()
-        ]
     }
 
     queryPreparation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {

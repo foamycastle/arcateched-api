@@ -1,8 +1,9 @@
-import {extendedRequest, extendedResponse, PrismaModel} from "../index";
+import {extendedRequest, extendedResponse, PrismaModel, RouterWareFunctions} from "../index";
 import {NextFunction} from "express";
 import {NoResultsFound} from "../../ArcatechedError/NoResultsFound";
 import {ArcatechedErrorInterface} from "../../ArcatechedError";
 import {MalformedRequest} from "../../ArcatechedError/BadRequest/MalformedRequest";
+import {Prisma} from "@prisma/client";
 
 
 export abstract class MachineData extends PrismaModel{
@@ -13,7 +14,19 @@ export abstract class MachineData extends PrismaModel{
         super()
         this.opName="Machine Data"
         this.prismaModel=this.prismaClient.machine_data
+        this.operationType='read'
+    }
 
+    get stack(): RouterWareFunctions {
+        return [
+            this.inputValidation(),
+            this.queryPreparation(),
+            this.databaseOperation(),
+            this.resultProcessor(),
+            this.touchTimestamp(),
+            this.resultEmitter(),
+            this.errorHandler()
+        ]
     }
 
     inputValidation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
@@ -58,6 +71,26 @@ export abstract class MachineData extends PrismaModel{
                 })
         }
     }
+    touchTimestamp(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
+        return  (request: extendedRequest, response: extendedResponse, next: NextFunction)=> {
+            console.log('Machine Data', 'touchTimestamp')
+            let transactionArray:Prisma.PrismaPromise<any>[] = []
+            for(const recordId of response.processedResults){
+                let queryObject=this.getTouchObject(recordId.id,this.operationType)
+                transactionArray.push(this.prismaModel.update(queryObject))
+            }
+            this.prismaClient.$transaction(transactionArray)
+                .then((results)=>{
+                    console.log(`touched ${results.length} timestamp${results.length==1?'':'s'}`)
+                    next()
+                })
+                .catch((hell)=>{
+                    console.log(hell)
+                    next()
+                })
+        };
+    }
+
     resultEmitter(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
             console.log('Machine Data','resultEmitter')
