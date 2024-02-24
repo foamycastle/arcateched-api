@@ -1,11 +1,26 @@
 import {Prisma} from "@prisma/client";
 
-let preparedQuery = Prisma.validator<Prisma.machine_dataFindUniqueArgs>()({
+let preparedQuery = Prisma.validator<Prisma.machine_dataFindFirstArgs>()({
     where:{
         id:""
     },
-    include:{
-        comments:true
+    select:{
+        id:true,
+        comments:{
+            where:{
+                 AND:[]
+            },
+            select:{
+                id:true,
+                content:true,
+                timestampObject:{
+                    select:{
+                        createdAt:true,
+                        modifiedAt:true
+                    }
+                }
+            }
+        }
     }
 })
 export default preparedQuery

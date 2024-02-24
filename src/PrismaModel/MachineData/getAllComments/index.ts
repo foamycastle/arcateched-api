@@ -3,6 +3,7 @@ import {extendedRequest, extendedResponse} from "../../index";
 import {NextFunction} from "express";
 import preparedQuery from "./preparedQuery";
 import inputValidation from "./validation";
+import {Prisma} from "@prisma/client";
 
 export default class getAllComments extends MachineData {
 
@@ -21,19 +22,17 @@ export default class getAllComments extends MachineData {
 
             const validata=request.validationResult.value
             this.preparedQuery.where.id=validata.machineId
-            if(validata.dateBegin&&validata.dateEnd){
-                if(this.preparedQuery.include.comments===true){
-                    delete this.preparedQuery.include.comments
-                    this.preparedQuery.include.comments={where: {AND: []}}
-                }
-                this.preparedQuery.include.comments.where.AND.push({
-                    timestampObject:{
-                        createdAt:{
-                            gte:validata.dateBegin
+            if(validata.dateBegin) {
+                this.preparedQuery.select.comments.where.AND.push({
+                    timestampObject: {
+                        createdAt: {
+                            gte: validata.dateBegin
                         }
                     }
-                },
-                {
+                })
+            }
+            if(validata.dateEnd) {
+                this.preparedQuery.select.comments.where.AND.push({
                     timestampObject:{
                         createdAt:{
                             lte:validata.dateEnd
@@ -41,24 +40,22 @@ export default class getAllComments extends MachineData {
                     }
                 })
             }
-            if(validata.contents){
-                if(this.preparedQuery.include.comments===true){
-                    delete this.preparedQuery.include.comments
-                    this.preparedQuery.include.comments={where: {AND: []}}
-                }
-                this.preparedQuery.include.comments.where.AND.push({
-                    contents:{
-                        search:validata.contents
+            if(validata.content){
+                this.preparedQuery.select.comments.where.AND.push({
+                    content:{
+                        search:validata.content
                     }
                 })
             }
+            next()
         }
     }
 
     databaseOperation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
             console.log(this.opName, 'databaseOperation')
-
+            response.queryResult=this.prismaModel.findFirstOrThrow(this.preparedQuery)
+            next()
         }
     }
 

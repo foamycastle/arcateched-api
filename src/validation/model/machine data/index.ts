@@ -11,9 +11,7 @@ export const comment = Joi.string().min(1).max(255).regex(/^.*$/)
 export const dateMaxNow = Joi.date().max('now')
 export const stringCompareMethod= Joi.string().valid('startsWith','endsWith','contains','equals')
 export const numberCompareMethod= Joi.string().valid('lte','lt','gte','gt','equals')
+export const dateBegin=Joi.date().less('now')
+export const dateEnd=Joi.date().less('now')
 
-export const dateRange = Joi.object({
-    dateBegin:Joi.date().less(Joi.ref('dateEnd')),
-    dateEnd:Joi.date().less('now')
-})
 

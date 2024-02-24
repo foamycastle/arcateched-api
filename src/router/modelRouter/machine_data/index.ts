@@ -8,6 +8,7 @@ import findModelNumber from "../../../PrismaModel/MachineData/findModelNumber";
 import findDateOfMfg from "../../../PrismaModel/MachineData/findDateOfMfg";
 import findName from "../../../PrismaModel/MachineData/findName";
 import createComment from "../../../PrismaModel/MachineData/createComment";
+import getAllComments from "../../../PrismaModel/MachineData/getAllComments";
 
 const machine_dataRouter=Express.Router({
     strict:true,
@@ -22,6 +23,7 @@ machine_dataRouter.get('/findSerialNumber', (new findSerialNumber).stack)
 machine_dataRouter.get('/findModelNumber',  (new findModelNumber).stack)
 machine_dataRouter.get('/findDateOfMfg',    (new findDateOfMfg).stack)
 machine_dataRouter.get('/findName',         (new findName).stack)
+machine_dataRouter.get('/getAllComments',   (new getAllComments).stack)
 
 machine_dataRouter.put('/createComment',    (new createComment).stack)
 

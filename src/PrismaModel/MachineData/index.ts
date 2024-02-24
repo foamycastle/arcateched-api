@@ -75,9 +75,15 @@ export abstract class MachineData extends PrismaModel{
         return  (request: extendedRequest, response: extendedResponse, next: NextFunction)=> {
             console.log('Machine Data', 'touchTimestamp')
             let transactionArray:Prisma.PrismaPromise<any>[] = []
-            for(const recordId of response.processedResults){
-                let queryObject=this.getTouchObject(recordId.id,this.operationType)
+            const results=response.processedResults
+            if(!Array.isArray(response.processedResults)){
+                let queryObject=this.getTouchObject(results.id,this.operationType)
                 transactionArray.push(this.prismaModel.update(queryObject))
+            }else {
+                for (const recordId of response.processedResults) {
+                    let queryObject = this.getTouchObject(recordId.id, this.operationType)
+                    transactionArray.push(this.prismaModel.update(queryObject))
+                }
             }
             this.prismaClient.$transaction(transactionArray)
                 .then((results)=>{
