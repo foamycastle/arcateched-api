@@ -26,6 +26,7 @@ let preparedQuery = Prisma.validator<Prisma.machine_dataUpdateArgs>()({
         id:true,
         comments:{
             select:{
+                id:true,
                 content:true
             },
             orderBy:{

@@ -9,6 +9,7 @@ import findDateOfMfg from "../../../PrismaModel/MachineData/findDateOfMfg";
 import findName from "../../../PrismaModel/MachineData/findName";
 import createComment from "../../../PrismaModel/MachineData/createComment";
 import getAllComments from "../../../PrismaModel/MachineData/getAllComments";
+import updateComment from "../../../PrismaModel/MachineData/updateComment";
 
 const machine_dataRouter=Express.Router({
     strict:true,
@@ -26,5 +27,6 @@ machine_dataRouter.get('/findName',         (new findName).stack)
 machine_dataRouter.get('/getAllComments',   (new getAllComments).stack)
 
 machine_dataRouter.put('/createComment',    (new createComment).stack)
+machine_dataRouter.put('/updateComment',    (new updateComment).stack)
 
 export default machine_dataRouter;
