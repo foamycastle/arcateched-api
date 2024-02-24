@@ -48,8 +48,8 @@ export abstract class MachineData extends PrismaModel{
     }
     databaseOperation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log('Machine Data', 'databaseOperation', 'findMany')
-            response.queryResult=this.prismaModel.findMany(this.preparedQuery)
+            console.log('Machine Data', 'databaseOperation', this.prismaOp)
+            response.queryResult=this.prismaModel[this.prismaOp](this.preparedQuery)
             next()
         }
     }
@@ -74,6 +74,10 @@ export abstract class MachineData extends PrismaModel{
     touchTimestamp(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return  (request: extendedRequest, response: extendedResponse, next: NextFunction)=> {
             console.log('Machine Data', 'touchTimestamp')
+            if(!request.touchTimestamp){
+                next()
+                return;
+            }
             let transactionArray:Prisma.PrismaPromise<any>[] = []
             const results=response.processedResults
             if(!Array.isArray(response.processedResults)){

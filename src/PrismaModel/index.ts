@@ -7,33 +7,17 @@ export interface extendedRequest extends Request {
     validationResult:Joi.ValidationResult
     transactionArray:Prisma.PrismaPromise<any>[]
     preparedQuery:any
+    touchTimestamp:boolean
 }
 export interface extendedResponse extends Response {
     queryResult:Prisma.PrismaPromise<any>
     processedResults:any
 }
 
-export type TimestampTouch<T extends
-    Prisma.machine_dataUpdateArgs |
-    Prisma.commentsUpdateArgs |
-    Prisma.contactsUpdateArgs |
-    Prisma.contacts_addressesUpdateArgs |
-    Prisma.contacts_phoneUpdateArgs |
-    Prisma.contacts_internetUpdateArgs |
-    Prisma.usersUpdateArgs |
-    Prisma.keysUpdateArgs |
-    Prisma.todoUpdateArgs |
-    Prisma.issuesUpdateArgs |
-    Prisma.issues_problem_tagsUpdateArgs |
-    Prisma.machine_zonesUpdateArgs |
-    Prisma.attachmentsUpdateArgs
-> ={
-    where:T['where'],
-    data:T['data']
-}
-
 export type OperationType='create'|'read'|'update'|'delete'
-
+export type PrismaAPIQueryOp='findMany'|'findFirst'|'findFirstOrThrow'|'findUnique'|
+    'findUniqueOrThrow'|'create'|'update'|'delete'|'upsert'|'createMany'|'updateMany'|'deleteMany'|'count'|
+    'aggregate'|'groupBy'
 
 export type RouterWareFunctions =Array<
     { (request: extendedRequest, response: extendedResponse, next: NextFunction) : void }|
@@ -54,6 +38,7 @@ export abstract class PrismaModel implements ExpressRouterWare{
 
     protected prismaClient:PrismaClient
     protected prismaModel:any
+    protected prismaOp:PrismaAPIQueryOp
     protected operationType:OperationType
 
     constructor(){
