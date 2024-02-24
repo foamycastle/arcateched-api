@@ -1,5 +1,5 @@
 import {MachineData} from "../index";
-import {extendedRequest, extendedResponse} from "../../index";
+import {extendedRequest, extendedResponse, RouterWareFunctions} from "../../index";
 import {NextFunction} from "express";
 import Prisma from "@prisma/client"
 import preparedQuery from "./preparedQuery";
@@ -16,13 +16,24 @@ export default class createComment extends MachineData {
         this.validationMethod = inputValidation
     }
 
+    get stack(): RouterWareFunctions {
+        return [
+            this.inputValidation(),
+            this.queryPreparation(),
+            this.databaseOperation(),
+            this.resultProcessor(),
+            this.resultEmitter(),
+            this.errorHandler()
+        ]
+    }
+
     queryPreparation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
             console.log(this.opName, 'queryPreparation')
 
             const validata=request.validationResult.value
             this.preparedQuery.where.id=validata.machineId
-            this.preparedQuery.data.comment.content = validata.comment
+            this.preparedQuery.data.comments.create.content = validata.comment
             next()
         }
     }
@@ -30,7 +41,7 @@ export default class createComment extends MachineData {
     databaseOperation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
             console.log(this.opName, 'databaseOperation')
-            response.queryResult=this.prismaModel.update(this.preparedQuery)
+            response.queryResult = this.prismaModel.update(this.preparedQuery)
             next()
         }
     }

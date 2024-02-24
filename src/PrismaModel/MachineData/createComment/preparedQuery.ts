@@ -1,5 +1,6 @@
 import {Prisma} from "@prisma/client";
 
+const timeObject=new Date()
 let preparedQuery = Prisma.validator<Prisma.machine_dataUpdateArgs>()({
     where:{
         id:""
@@ -10,15 +11,23 @@ let preparedQuery = Prisma.validator<Prisma.machine_dataUpdateArgs>()({
                 content:"",
                 timestampObject:{
                     create:{
-                        createdAt:new Date()
+                        createdAt:timeObject
                     }
                 }
+            }
+        },
+        timestampObject:{
+            update:{
+                modifiedAt:timeObject
             }
         }
     },
     select:{
         id:true,
         comments:{
+            select:{
+                content:true
+            },
             orderBy:{
                 timestampObject:{
                     createdAt:'desc'
