@@ -5,17 +5,15 @@ import Prisma from "@prisma/client"
 import preparedQuery from "./preparedQuery";
 import inputValidation from "./validation";
 
-export default class createComment extends MachineData {
+export default class updateComment extends MachineData {
 
     opName: string
+
     constructor() {
         super();
-        this.opName = 'createComment'
-        this.operationType = 'update'
-        this.preparedQuery = preparedQuery
+        this.opName = 'updateComment'
         this.validationMethod = inputValidation
     }
-
     get stack(): RouterWareFunctions {
         return [
             this.inputValidation(),
@@ -30,10 +28,9 @@ export default class createComment extends MachineData {
     queryPreparation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
             console.log(this.opName, 'queryPreparation')
-
             const validata=request.validationResult.value
-            this.preparedQuery.where.id=validata.id
-            this.preparedQuery.data.comments.create.content = validata.content
+
+            this.preparedQuery=preparedQuery(validata.id,validata.commentId,validata.content)
             next()
         }
     }
@@ -41,15 +38,7 @@ export default class createComment extends MachineData {
     databaseOperation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
             console.log(this.opName, 'databaseOperation')
-            response.queryResult = this.prismaModel.update(this.preparedQuery)
-            next()
-        }
-    }
-
-    resultEmitter(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName, 'resultEmitter')
-            response.json(response.processedResults)
+            response.queryResult=this.prismaModel.update(this.preparedQuery)
             next()
         }
     }
