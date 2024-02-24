@@ -12,6 +12,7 @@ export default class findDateOfMfg extends MachineData {
         super();
         this.opName = 'findDateOfMfg'
         this.operationType = 'read'
+        this.prismaOp = 'findMany'
         this.preparedQuery = preparedQuery
         this.validationMethod = inputValidation
     }
@@ -26,6 +27,7 @@ export default class findDateOfMfg extends MachineData {
             }else{
                 this.preparedQuery.where.dateOfMfg[searchMethod]=dateValue
             }
+            request.touchTimestamp=true
             next()
         }
     }

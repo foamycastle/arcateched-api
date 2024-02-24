@@ -12,6 +12,7 @@ export default class findName extends MachineData {
         super();
         this.opName = 'findName'
         this.operationType = 'read'
+        this.prismaOp = 'findMany'
         this.preparedQuery = preparedQuery
         this.validationMethod = inputValidation
     }
@@ -26,6 +27,7 @@ export default class findName extends MachineData {
             }else{
                 this.preparedQuery.where.name=nameSearch
             }
+            request.touchTimestamp=true
             next()
         }
     }

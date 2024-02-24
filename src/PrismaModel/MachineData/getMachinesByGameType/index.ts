@@ -11,6 +11,7 @@ export default class getMachinesByGameType extends MachineData {
         super();
         this.opName = 'getMachinesByGameType'
         this.operationType = 'read'
+        this.prismaOp = 'findMany'
         this.preparedQuery = preparedQuery
         this.validationMethod = inputValidation
     }
@@ -19,6 +20,7 @@ export default class getMachinesByGameType extends MachineData {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
             console.log(this.opName, 'queryPreparation')
             this.preparedQuery.where.gameType.hasSome=request.validationResult.value
+            request.touchTimestamp=true
             next()
         }
     }

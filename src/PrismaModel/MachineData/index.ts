@@ -43,6 +43,7 @@ export abstract class MachineData extends PrismaModel{
     queryPreparation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
             console.log('Machine Data','queryPreparation')
+            request.touchTimestamp=true
             next()
         }
     }

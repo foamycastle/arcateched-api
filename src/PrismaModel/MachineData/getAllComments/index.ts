@@ -12,6 +12,7 @@ export default class getAllComments extends MachineData {
     constructor() {
         super();
         this.opName = 'getAllComments'
+        this.prismaOp = 'findFirstOrThrow'
         this.preparedQuery = preparedQuery
         this.validationMethod = inputValidation
     }
@@ -47,14 +48,7 @@ export default class getAllComments extends MachineData {
                     }
                 })
             }
-            next()
-        }
-    }
-
-    databaseOperation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName, 'databaseOperation')
-            response.queryResult=this.prismaModel.findFirstOrThrow(this.preparedQuery)
+            request.touchTimestamp=true
             next()
         }
     }

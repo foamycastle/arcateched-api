@@ -12,6 +12,7 @@ export default class updateComment extends MachineData {
     constructor() {
         super();
         this.opName = 'updateComment'
+        this.prismaOp = 'update'
         this.validationMethod = inputValidation
     }
     get stack(): RouterWareFunctions {
@@ -31,14 +32,7 @@ export default class updateComment extends MachineData {
             const validata=request.validationResult.value
 
             this.preparedQuery=preparedQuery(validata.id,validata.commentId,validata.content)
-            next()
-        }
-    }
-
-    databaseOperation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName, 'databaseOperation')
-            response.queryResult=this.prismaModel.update(this.preparedQuery)
+            request.touchTimestamp=false
             next()
         }
     }

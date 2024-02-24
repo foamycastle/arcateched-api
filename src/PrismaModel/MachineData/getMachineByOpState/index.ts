@@ -15,6 +15,7 @@ export default class getMachinesByOpState extends MachineData {
         super();
         this.opName = 'getMachinesByOpState'
         this.operationType = 'read'
+        this.prismaOp = 'findMany'
         this.preparedQuery=preparedQuery
         this.validationMethod=inputValidation
     }
@@ -23,6 +24,7 @@ export default class getMachinesByOpState extends MachineData {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
             console.log(this.opName, 'queryPreparation')
             this.preparedQuery.where.OR = request.validationResult.value.map((value)=>{return {opState:value}})
+            request.touchTimestamp=true
             next()
         }
     }

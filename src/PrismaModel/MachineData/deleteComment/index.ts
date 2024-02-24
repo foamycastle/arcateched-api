@@ -12,6 +12,7 @@ export default class deleteComment extends MachineData {
     constructor() {
         super();
         this.opName = 'deleteComment'
+        this.prismaOp = "update"
         this.validationMethod = inputValidation
     }
 
@@ -21,33 +22,8 @@ export default class deleteComment extends MachineData {
             const validata=request.validationResult.value
 
             this.preparedQuery = preparedQuery(validata.id,validata.commentId)
+            request.touchTimestamp=false
             next()
         }
     }
-
-    databaseOperation(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName, 'databaseOperation')
-            response.queryResult=this.prismaModel.update(this.preparedQuery)
-            next()
-        }
-    }
-
-    /*resultProcessor(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName, 'resultProcessor')
-        }
-    }
-
-    resultEmitter(): (request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName, 'resultEmitter')
-        }
-    }
-
-    errorHandler(): (err: any, request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
-        return (err: any, request: extendedRequest, response: extendedResponse, next: NextFunction) => {
-            console.log(this.opName, 'errorHandler')
-        }
-    }*/
 }

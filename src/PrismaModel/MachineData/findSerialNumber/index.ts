@@ -11,6 +11,7 @@ export default class findSerialNumber extends MachineData {
         super();
         this.opName = 'findSerialNumber'
         this.operationType = 'read'
+        this.prismaOp = 'findMany'
         this.preparedQuery = preparedQuery
         this.validationMethod = inputValidation
     }
@@ -25,6 +26,7 @@ export default class findSerialNumber extends MachineData {
             }else{
                 this.preparedQuery.where.serialNumber=serialNumberSearch
             }
+            request.touchTimestamp=true
             next()
         }
     }

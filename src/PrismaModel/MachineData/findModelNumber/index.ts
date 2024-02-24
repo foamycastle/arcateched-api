@@ -12,6 +12,7 @@ export default class findModelNumber extends MachineData {
         super();
         this.opName = 'findModelNumber'
         this.operationType = 'read'
+        this.prismaOp = 'findMany'
         this.preparedQuery = preparedQuery
         this.validationMethod = inputValidation
     }
@@ -26,6 +27,7 @@ export default class findModelNumber extends MachineData {
             }else{
                 this.preparedQuery.where.modelNumber=modelNumberSearch
             }
+            request.touchTimestamp=true
             next()
         }
     }

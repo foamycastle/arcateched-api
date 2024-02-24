@@ -12,6 +12,7 @@ export default class getMachinesById extends MachineData {
         super();
         this.opName = 'getMachinesById'
         this.operationType = 'read'
+        this.prismaOp = 'findMany'
         this.preparedQuery=preparedQuery;
         this.validationMethod=inputValidation;
     }
@@ -20,6 +21,7 @@ export default class getMachinesById extends MachineData {
         return (request: extendedRequest, response: extendedResponse, next: NextFunction) => {
             console.log(this.opName, 'queryPreparation')
             this.preparedQuery.where.OR = request.validationResult.value.map((recordId:string)=>{return {id: recordId}})
+            request.touchTimestamp=true
             next()
         }
     }
