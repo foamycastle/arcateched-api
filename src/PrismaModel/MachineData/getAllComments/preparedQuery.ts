@@ -5,13 +5,7 @@ let preparedQuery = Prisma.validator<Prisma.machine_dataFindUniqueArgs>()({
         id:""
     },
     include:{
-        comments:{
-            where:{
-                OR:[],
-                AND:[],
-                NOT:[]
-            }
-        }
+        comments:true
     }
 })
 export default preparedQuery
