@@ -26,13 +26,22 @@ model attachments {
 }
 
 model comments {
-  id              String        @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
-  timestamp       String?       @db.Uuid
+  id              String                 @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  timestamp       String                 @db.Uuid
   content         String?
   userRole        user_role?
-  relatedObject   String?       @db.Uuid
-  timestampObject timestamp?    @relation("comments_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestamp")
-  machine_data    machine_data? @relation(fields: [relatedObject], references: [id])
+  machines        machine_data[]         @relation("machine_data_comments")
+  attachments     attachments[]          @relation("attachment_comments")
+  contacts        contacts[]             @relation("contacts_comments")
+  issues          issues[]               @relation("issues_comments")
+  keys            keys[]                 @relation("keys_comments")
+  machine_zones   machine_zones[]        @relation("machine_zones_comments")
+  todo            todo[]                 @relation("todo_comments")
+  users           users[]                @relation("users_comments")
+  poItems         purchase_order_items[] @relation("poItems_comments")
+  purchase_orders purchase_orders[]      @relation("po_comments")
+  replaced_parts  replaced_parts[]       @relation("replaced_parts_comments")
+  timestampObject timestamp              @relation(fields: [timestamp], references: [id])
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -167,11 +176,15 @@ model machine_data {
 }
 
 model machine_zones {
-  id           String         @id(map: "gameZones_pkey") @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
-  label        String         @db.VarChar(32)
-  description  String?        @db.VarChar(255)
-  floorArea    Float?
-  machine_data machine_data[]
+  id              String         @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  label           String         @db.VarChar(32)
+  description     String?        @db.VarChar(255)
+  floorArea       Float?
+  timestamp       String         @db.Uuid
+  timestampObject timestamp      @relation(fields: [timestamp], references: [id])
+  attachments     attachments[]  @relation("machine_zone_attachments")
+  comments        comments[]     @relation("machine_zones_comments")
+  machine_data    machine_data[]
 }
 
 model timestamp {
@@ -302,7 +315,7 @@ model purchase_orders {
   contacts             contacts?              @relation(fields: [source], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "source")
   timestampObject      timestamp?             @relation("purchase_orders_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestamp")
 
-  @@id([id, number])
+  @@id([id])
 }
 
 model replaced_parts {
