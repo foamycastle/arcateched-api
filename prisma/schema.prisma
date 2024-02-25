@@ -9,20 +9,23 @@ datasource db {
 }
 
 model attachments {
-  id              String        @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
-  label           String?       @db.VarChar(64)
+  id              String                 @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  label           String?                @db.VarChar(64)
   path            String?
-  machine         String?       @db.Uuid
-  key             String?       @db.Uuid
-  contact         String?       @db.Uuid
-  user            String?       @db.Uuid
   type            attType?
-  timestamp       String?       @db.Uuid
-  contacts        contacts?     @relation(fields: [contact], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "contactId_fkey")
-  keys            keys?         @relation(fields: [key], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "keyId_fkey")
-  machine_data    machine_data? @relation(fields: [machine], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "machineId_fkey")
-  timestampObject timestamp?    @relation("attachments_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
-  users           users?        @relation(fields: [user], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "userId_fkey")
+  timestamp       String?                @db.Uuid
+  timestampObject timestamp?             @relation(fields: [timestamp], references: [id])
+  machines        machine_data[]         @relation("machine_attachments")
+  comments        comments[]             @relation("attachment_comments")
+  contacts        contacts[]             @relation("contacts_attachments")
+  issues          issues[]               @relation("issues_attachments")
+  machine_zones   machine_zones[]        @relation("machine_zone_attachments")
+  keys            keys[]                 @relation("keys_attachments")
+  todo            todo[]                 @relation("todo_attachments")
+  users           users[]                @relation("user_attachments")
+  poItems         purchase_order_items[] @relation("poItems_attachments")
+  purchase_orders purchase_orders[]      @relation("po_attachments")
+  replaced_parts  replaced_parts[]       @relation("replaced_parts_attachments")
 }
 
 model comments {
@@ -46,19 +49,18 @@ model comments {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model contacts {
-  id                 String               @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
-  name               String               @db.VarChar(64)
-  type               contactType[]
-  supplies           String[]             @db.VarChar(64)
-  timestamp          String?              @db.Uuid
-  attachments        attachments[]
-  timestampObject    timestamp?           @relation("contacts_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
-  contacts_addresses contacts_addresses[]
-  contacts_internet  contacts_internet[]
-  contacts_phone     contacts_phone[]
-  machine_data       machine_data[]
-  purchase_orders    purchase_orders[]
-  users              users[]
+  id              String               @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  name            String               @db.VarChar(64)
+  addresses       contacts_addresses[]
+  phones          contacts_phone[]
+  interet         contacts_internet[]
+  type            contactType[]
+  supplies        String[]             @db.VarChar(64)
+  timestamp       String?              @db.Uuid
+  timestampObject timestamp?           @relation(fields: [timestamp], references: [id])
+  attachments     attachments[]        @relation("contacts_attachments")
+  comments        comments[]           @relation("contacts_comments")
+  machines        machine_data[]
 }
 
 model contacts_addresses {
@@ -74,7 +76,7 @@ model contacts_addresses {
   contactId      String?    @db.Uuid
   city           String?    @db.VarChar(64)
   name           String?    @db.VarChar(48)
-  contacts       contacts?  @relation(fields: [contactId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "contactId_fkey")
+  parent         contacts?  @relation(fields: [contactId], references: [id], onDelete: Cascade)
 }
 
 model contacts_internet {
@@ -86,7 +88,7 @@ model contacts_internet {
   id        String    @id(map: "contactsInternet_pkey") @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
   email     String[]  @db.VarChar(128)
   contactId String?   @db.Uuid
-  contacts  contacts? @relation(fields: [contactId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "contactId_fkey")
+  parent    contacts? @relation(fields: [contactId], references: [id], onDelete: Cascade)
 }
 
 model contacts_phone {
@@ -100,76 +102,71 @@ model contacts_phone {
   id            String    @id(map: "contactsPhone_pkey") @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
   contactId     String?   @db.Uuid
   name          String?   @db.VarChar(48)
-  contacts      contacts? @relation(fields: [contactId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "contactId_fkey")
+  parent        contacts? @relation(fields: [contactId], references: [id], onDelete: Cascade)
 }
 
 model issues {
-  id                   String                 @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
-  machine              String?                @db.Uuid
-  label                String?                @db.VarChar(64)
-  description          String?
-  diagnosis            String?
-  expectedAction       String?
-  postResult           String?
-  timestamp            String?                @db.Uuid
-  tag                  String?                @db.Uuid
-  machine_data         machine_data?          @relation(fields: [machine], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "machine_fkey")
-  issues_problem_tags  issues_problem_tags?   @relation(fields: [tag], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tag")
-  timestampObject      timestamp?             @relation("issues_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
-  purchase_order_items purchase_order_items[]
-  replaced_parts       replaced_parts[]
-  todo                 todo[]
+  id              String                @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  machine         String?               @db.Uuid
+  label           String?               @db.VarChar(64)
+  description     String?
+  diagnosis       String?
+  expectedAction  String?
+  postResult      String?
+  timestamp       String                @db.Uuid
+  tag             String?               @db.Uuid
+  issue_tags      issues_problem_tags[] @relation("issue_problem_tags")
+  attachments     attachments[]         @relation("issues_attachments")
+  comments        comments[]            @relation("issues_comments")
+  timestampObject timestamp             @relation(fields: [timestamp], references: [id])
 }
 
 model issues_problem_tags {
   id     String   @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
   label  String?  @db.VarChar(32)
   color  BigInt?
-  issues issues[]
+  issues issues[] @relation("issue_problem_tags")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model keys {
-  id                      String         @id(map: "pkey_KeysID") @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
-  name                    String         @db.VarChar(32)
-  label                   String?        @db.VarChar(32)
-  markings                String[]       @db.VarChar
-  attachments             attachments[]
-  timestamp               String?        @db.Uuid
-  machine_data_cabinetKey machine_data[] @relation("machine_data_cabinetKeyTokeys")
-  machine_data_serviceKey machine_data[] @relation("machine_data_serviceKeyTokeys")
-  timestampObject         timestamp?     @relation("keys_timestampTotimestamp", fields: [timestamp], references: [id])
+  id                  String         @id(map: "pkey_KeysID") @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  name                String         @db.VarChar(32)
+  label               String?        @db.VarChar(32)
+  markings            String[]       @db.VarChar
+  timestamp           String?        @db.Uuid
+  timestampObject     timestamp?     @relation(fields: [timestamp], references: [id])
+  machine_service_key machine_data[] @relation("machine_service_keys")
+  machine_cabinet_key machine_data[] @relation("machine_cabinet_keys")
+  comments            comments[]     @relation("keys_comments")
+  attachments         attachments[]  @relation("keys_attachments")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model machine_data {
-  id                   String                 @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
-  name                 String                 @db.VarChar(64)
-  modelNumber          String?                @db.VarChar(32)
-  serialNumber         String                 @unique(map: "gameSerial__u") @db.VarChar(32)
-  dateOfMfg            DateTime?              @db.Date
-  dateEnter            DateTime?              @db.Date
-  dateExit             DateTime?              @db.Date
-  cKey                 String?                @map("cabinetKey") @db.Uuid
-  sKey                 String?                @map("serviceKey") @db.Uuid
-  playerCount          Int?                   @db.SmallInt
-  gameType             gameType[]
-  gameZone             String?                @db.Uuid
-  occupied             Float?
-  timestamp            String?                @db.Uuid
-  mfgUUID              String?                @db.Uuid
-  opState              opState?
-  attachments          attachments[]
-  issues               issues[]
-  cabinetKey           keys?                  @relation("machine_data_cabinetKeyTokeys", fields: [cKey], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cabinetKey_fkey")
-  machine_zones        machine_zones?         @relation(fields: [gameZone], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "gameZone_fkey")
-  contacts             contacts?              @relation(fields: [mfgUUID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "manufacturerID")
-  serviceKey           keys?                  @relation("machine_data_serviceKeyTokeys", fields: [sKey], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "serviceKey_fkey")
-  timestampObject      timestamp?             @relation("machine_data_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestamp")
-  purchase_order_items purchase_order_items[]
-  replaced_parts       replaced_parts[]
-  todo                 todo[]
-  comments             comments[]
+  id              String         @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  name            String         @db.VarChar(64)
+  modelNumber     String?        @db.VarChar(32)
+  serialNumber    String         @unique(map: "gameSerial__u") @db.VarChar(32)
+  dateOfMfg       DateTime?      @db.Date
+  dateEnter       DateTime?      @db.Date
+  dateExit        DateTime?      @db.Date
+  cKey            String?        @map("cabinetKey") @db.Uuid
+  sKey            String?        @map("serviceKey") @db.Uuid
+  playerCount     Int?           @db.SmallInt
+  gameType        gameType[]
+  gameZone        String?        @db.Uuid
+  occupied        Float?
+  timestamp       String         @db.Uuid
+  mfgUUID         String?        @db.Uuid
+  opState         opState?
+  manufacturer    contacts?      @relation(fields: [mfgUUID], references: [id])
+  serviceKey      keys?          @relation("machine_service_keys", fields: [sKey], references: [id])
+  cabinetKey      keys?          @relation("machine_cabinet_keys", fields: [cKey], references: [id])
+  zone            machine_zones? @relation(fields: [gameZone], references: [id])
+  timestampObject timestamp      @relation(fields: [timestamp], references: [id])
+  attachments     attachments[]  @relation("machine_attachments")
+  comments        comments[]     @relation("machine_data_comments")
 
   @@index([mfgUUID], map: "fki_manufacturerID")
   @@index([timestamp], map: "fki_timestamp")
@@ -188,132 +185,108 @@ model machine_zones {
 }
 
 model timestamp {
-  id                   String                 @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
-  createdAt            DateTime?              @db.Timestamp(6)
-  createdBy            String?                @db.Uuid
-  modifiedAt           DateTime?              @db.Timestamp(6)
-  modifiedBy           String?                @db.Uuid
-  openedAt             DateTime?              @db.Timestamp(6)
-  openedBy             String?                @db.Uuid
-  resolvedAt           DateTime?              @db.Timestamp(6)
-  resolvedBy           String?                @db.Uuid
-  assignedAt           DateTime?              @db.Timestamp(6)
-  assignedBy           String?                @db.Uuid
-  completedAt          DateTime?              @db.Timestamp(6)
-  completedBy          String?                @db.Uuid
-  dateMfg              DateTime?              @db.Date
-  removedAt            DateTime?              @db.Timestamp(6)
-  removedBy            String?                @db.Uuid
-  enteredAt            DateTime?              @db.Timestamp(6)
-  enteredBy            String?                @db.Uuid
-  lastLogin            DateTime?              @db.Timestamp(6)
-  goalBegin            DateTime?              @db.Timestamp(6)
-  goalExpCom           DateTime?              @db.Timestamp(6)
-  replaceAt            DateTime?              @db.Timestamp(6)
-  replacedBy           String?                @db.Uuid
-  lastAccess           DateTime?              @db.Timestamp(6)
-  lastAccessBy         String?                @db.Uuid
-  attachments          attachments[]          @relation("attachments_timestampTotimestamp")
-  comments             comments[]             @relation("comments_timestampTotimestamp")
-  keys                 keys[]                 @relation("keys_timestampTotimestamp")
-  contacts             contacts[]             @relation("contacts_timestampTotimestamp")
-  issues               issues[]               @relation("issues_timestampTotimestamp")
-  machine_data         machine_data[]         @relation("machine_data_timestampTotimestamp")
-  purchase_order_items purchase_order_items[] @relation("purchase_order_items_timestampTotimestamp")
-  purchase_orders      purchase_orders[]      @relation("purchase_orders_timestampTotimestamp")
-  replaced_parts       replaced_parts[]       @relation("replaced_parts_timestampTotimestamp")
-  user_assignedBy      users?                 @relation("timestamp_assignedByTousers", fields: [assignedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "assignedBy_fkey")
-  user_completedBy     users?                 @relation("timestamp_completedByTousers", fields: [completedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "completedBy_fkey")
-  user_createdBy       users?                 @relation("timestamp_createdByTousers", fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "createdBy_fkey")
-  user_enteredBy       users?                 @relation("timestamp_enteredByTousers", fields: [enteredBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "enteredBy_fkey")
-  user_lastAccessBy    users?                 @relation("timestamp_lastAccessByTousers", fields: [lastAccessBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "lastAccessBy")
-  user_modifiedBy      users?                 @relation("timestamp_modifiedByTousers", fields: [modifiedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "modifiedBy_fkey")
-  user_openedBy        users?                 @relation("timestamp_openedByTousers", fields: [openedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "openedBy_fkey")
-  user_removedBy       users?                 @relation("timestamp_removedByTousers", fields: [removedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "removedBy_fkey")
-  user_replacedBy      users?                 @relation("timestamp_replacedByTousers", fields: [replacedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "replacedBy_fkey")
-  user_resolvedBy      users?                 @relation("timestamp_resolvedByTousers", fields: [resolvedBy], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "resolvedBy_fkey")
-  todo                 todo[]                 @relation("todo_timestampTotimestamp")
-  user                 users[]                @relation("users_timestampTotimestamp")
+  id              String            @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  createdAt       DateTime?         @db.Timestamp(6)
+  modifiedAt      DateTime?         @db.Timestamp(6)
+  openedAt        DateTime?         @db.Timestamp(6)
+  assignedAt      DateTime?         @db.Timestamp(6)
+  resolvedAt      DateTime?         @db.Timestamp(6)
+  completedAt     DateTime?         @db.Timestamp(6)
+  removedAt       DateTime?         @db.Timestamp(6)
+  enteredAt       DateTime?         @db.Timestamp(6)
+  lastLogin       DateTime?         @db.Timestamp(6)
+  goalBegin       DateTime?         @db.Timestamp(6)
+  goalExpCom      DateTime?         @db.Timestamp(6)
+  replaceAt       DateTime?         @db.Timestamp(6)
+  lastAccess      DateTime?         @db.Timestamp(6)
+  resolvedBy      String?           @db.Uuid
+  createdBy       String?           @db.Uuid
+  modifiedBy      String?           @db.Uuid
+  openedBy        String?           @db.Uuid
+  assignedBy      String?           @db.Uuid
+  completedBy     String?           @db.Uuid
+  dateMfg         DateTime?         @db.Date
+  removedBy       String?           @db.Uuid
+  enteredBy       String?           @db.Uuid
+  replacedBy      String?           @db.Uuid
+  lastAccessBy    String?           @db.Uuid
+  attachments     attachments[]
+  comments        comments[]
+  contacts        contacts[]
+  keys            keys[]
+  machines        machine_data[]
+  zones           machine_zones[]
+  issues          issues[]
+  todo            todo[]
+  users           users[]
+  purchase_orders purchase_orders[]
+  replaced_parts  replaced_parts[]
 }
 
 model todo {
-  id                   String                 @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
-  isCompleted          Boolean                @default(false)
-  userLevel            user_role?
-  assignedTo           String?                @db.Uuid
-  label                String?                @db.VarChar(64)
-  description          String?
-  priority             Priority?
-  disposition          String?
-  relatedMachine       String?                @db.Uuid
-  relatedIssue         String?                @db.Uuid
-  timestamp            String?                @db.Uuid
-  purchase_order_items purchase_order_items[]
-  replaced_parts       replaced_parts[]
-  issues               issues?                @relation(fields: [relatedIssue], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "issueId_fkey")
-  machine_data         machine_data?          @relation(fields: [relatedMachine], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "machineId_fkey")
-  timestampObject      timestamp?             @relation("todo_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
+  id              String        @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  isCompleted     Boolean       @default(false)
+  userLevel       user_role?
+  assignedTo      String?       @db.Uuid
+  label           String?       @db.VarChar(64)
+  description     String?
+  priority        Priority?
+  disposition     String?
+  relatedMachine  String?       @db.Uuid
+  relatedIssue    String?       @db.Uuid
+  attachments     attachments[] @relation("todo_attachments")
+  timestamp       String        @db.Uuid
+  timestampObject timestamp     @relation(fields: [timestamp], references: [id])
+  comments        comments[]    @relation("todo_comments")
 }
 
 model users {
-  id                     String        @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
-  username               String        @db.VarChar(16)
-  displayName            String        @db.VarChar(96)
-  password               Bytes
-  isLoggedIn             Boolean?
-  userRole               user_role?
-  userContact            String?       @db.Uuid
-  timestamp              String?       @db.Uuid
-  attachments            attachments[]
-  timestampassignedBy    timestamp[]   @relation("timestamp_assignedByTousers")
-  timestamp_completedBy  timestamp[]   @relation("timestamp_completedByTousers")
-  timestamp_createdBy    timestamp[]   @relation("timestamp_createdByTousers")
-  timestamp_enteredBy    timestamp[]   @relation("timestamp_enteredByTousers")
-  timestamp_lastAccessBy timestamp[]   @relation("timestamp_lastAccessByTousers")
-  timestamp_modifiedBy   timestamp[]   @relation("timestamp_modifiedByTousers")
-  timestamp_openedBy     timestamp[]   @relation("timestamp_openedByTousers")
-  timestamp_removedBy    timestamp[]   @relation("timestamp_removedByTousers")
-  timestamp_replacedBy   timestamp[]   @relation("timestamp_replacedByTousers")
-  timestamp_resolvedBy   timestamp[]   @relation("timestamp_resolvedByTousers")
-  timestamp_users        timestamp?    @relation("users_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestampId_fkey")
-  contacts               contacts?     @relation(fields: [userContact], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "userContact_fkey")
+  id              String        @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  username        String        @db.VarChar(16)
+  displayName     String        @db.VarChar(96)
+  password        Bytes
+  isLoggedIn      Boolean?
+  userRole        user_role?
+  userContact     String?       @db.Uuid
+  timestamp       String?       @db.Uuid
+  attachments     attachments[] @relation("user_attachments")
+  timestampObject timestamp?    @relation(fields: [timestamp], references: [id])
+  comments        comments[]    @relation("users_comments")
 }
 
 model purchase_order_items {
-  id              String           @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
-  po_id           String?          @db.Uuid
-  recv            Boolean?
-  partNumber      String?          @db.VarChar(32)
-  description     String?          @db.VarChar(255)
-  qty             Int?
-  unitPrice       Int?
-  purpose         String?          @db.VarChar(255)
-  relatedMachine  String?          @db.Uuid
-  relatedIssue    String?          @db.Uuid
-  relatedTodo     String?          @db.Uuid
-  timestamp       String?          @db.Uuid
-  purchase_orders purchase_orders? @relation(fields: [po_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "poid")
-  issues          issues?          @relation(fields: [relatedIssue], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "relatedIssue")
-  machine_data    machine_data?    @relation(fields: [relatedMachine], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "relatedMachine")
-  todo            todo?            @relation(fields: [relatedTodo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "relatedTodo")
-  timestampObject timestamp?       @relation("purchase_order_items_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestamp")
+  id             String          @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  po_id          String          @db.Uuid
+  recv           Boolean?
+  partNumber     String?         @db.VarChar(32)
+  description    String?         @db.VarChar(255)
+  qty            Int?
+  unitPrice      Int?
+  purpose        String?         @db.VarChar(255)
+  relatedMachine String?         @db.Uuid
+  relatedIssue   String?         @db.Uuid
+  relatedTodo    String?         @db.Uuid
+  attachments    attachments[]   @relation("poItems_attachments")
+  comments       comments[]      @relation("poItems_comments")
+  parent         purchase_orders @relation(fields: [po_id], references: [id])
 }
 
 model purchase_orders {
-  id                   String                 @unique(map: "purchase_order_id") @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
-  number               String                 @db.VarChar(10)
-  timestamp            String?                @db.Uuid
-  recv                 Boolean                @default(false)
-  source               String?                @db.Uuid
-  supplier_order_no    String?                @db.VarChar(32)
-  purchaseMethod       String?                @db.Uuid
-  shippingCost         BigInt?
-  salesTax             BigInt?
-  shipping_carrier     String?                @db.Uuid
-  carrier_tracking     String?                @db.VarChar(48)
-  purchase_order_items purchase_order_items[]
-  contacts             contacts?              @relation(fields: [source], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "source")
-  timestampObject      timestamp?             @relation("purchase_orders_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestamp")
+  id                String                 @unique(map: "purchase_order_id") @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  number            String                 @db.VarChar(10)
+  timestamp         String                 @db.Uuid
+  recv              Boolean                @default(false)
+  source            String?                @db.Uuid
+  supplier_order_no String?                @db.VarChar(32)
+  purchaseMethod    String?                @db.Uuid
+  shippingCost      BigInt?
+  salesTax          BigInt?
+  shipping_carrier  String?                @db.Uuid
+  carrier_tracking  String?                @db.VarChar(48)
+  timestampObject   timestamp              @relation(fields: [timestamp], references: [id])
+  attachments       attachments[]          @relation("po_attachments")
+  comments          comments[]             @relation("po_comments")
+  items             purchase_order_items[]
 
   @@id([id])
 }
@@ -325,11 +298,10 @@ model replaced_parts {
   relatedMachine  String?       @db.Uuid
   relatedIssue    String?       @db.Uuid
   relatedTodo     String?       @db.Uuid
-  timestamp       String?       @db.Uuid
-  issues          issues?       @relation(fields: [relatedIssue], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "relatedIssue")
-  machine_data    machine_data? @relation(fields: [relatedMachine], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "relatedMachine")
-  todo            todo?         @relation(fields: [relatedTodo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "relatedTodo")
-  timestampObject timestamp?    @relation("replaced_parts_timestampTotimestamp", fields: [timestamp], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "timestamp")
+  timestamp       String        @db.Uuid
+  attachments     attachments[] @relation("replaced_parts_attachments")
+  timestampObject timestamp     @relation(fields: [timestamp], references: [id])
+  comment         comments[]    @relation("replaced_parts_comments")
 }
 
 enum Priority {

@@ -7,8 +7,20 @@ const preparedQuery = (machineId:string,commentId:string) => {
         },
         data:{
             comments:{
+                update:{
+                    where:{
+                        id: commentId
+                    },
+                    data:{
+                        timestampObject:{
+                            delete:{
+                                id: commentId
+                            }
+                        }
+                    }
+                },
                 delete:{
-                    id:commentId
+                    id: commentId
                 }
             }
         },

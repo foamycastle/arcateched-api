@@ -10,6 +10,10 @@ import findName from "../../../PrismaModel/MachineData/findName";
 import createComment from "../../../PrismaModel/MachineData/createComment";
 import getAllComments from "../../../PrismaModel/MachineData/getAllComments";
 import updateComment from "../../../PrismaModel/MachineData/updateComment";
+import deleteComment from "../../../PrismaModel/MachineData/deleteComment";
+import createAttachment from "../../../PrismaModel/MachineData/createAttachment";
+import updateAttachment from "../../../PrismaModel/MachineData/updateAttachment";
+import deleteAttachment from "../../../PrismaModel/MachineData/deleteAttachment";
 
 const machine_dataRouter=Express.Router({
     strict:true,
@@ -28,5 +32,9 @@ machine_dataRouter.get('/getAllComments',   (new getAllComments).stack)
 
 machine_dataRouter.put('/createComment',    (new createComment).stack)
 machine_dataRouter.put('/updateComment',    (new updateComment).stack)
+machine_dataRouter.put('/deleteComment',    (new deleteComment).stack)
+machine_dataRouter.put('/createAttachment', (new createAttachment).stack)
+machine_dataRouter.put('/updateAttachment', (new updateAttachment).stack)
+machine_dataRouter.put('/deleteAttachment', (new deleteAttachment).stack)
 
 export default machine_dataRouter;
