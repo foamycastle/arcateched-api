@@ -1,6 +1,7 @@
 import Express from "express";
 import {Helper} from "./helper/helper";
 import router from "./router";
+
 const server = Express()
 const config=require('dotenv').config()
 server.use(Express.json({
@@ -8,6 +9,7 @@ server.use(Express.json({
     limit: 1024,
     verify:Helper.verifyJSON
 }))
+
 
 server.use("/",(req,res,next)=>{
     console.log("Request: ",req.method, req.path)

@@ -157,14 +157,14 @@ model machine_data {
   gameType        gameType[]
   gameZone        String?        @db.Uuid
   occupied        Float?
-  timestamp       String         @db.Uuid
+  timestamp       String?        @db.Uuid
   mfgUUID         String?        @db.Uuid
   opState         opState?
   manufacturer    contacts?      @relation(fields: [mfgUUID], references: [id])
   serviceKey      keys?          @relation("machine_service_keys", fields: [sKey], references: [id])
   cabinetKey      keys?          @relation("machine_cabinet_keys", fields: [cKey], references: [id])
   zone            machine_zones? @relation(fields: [gameZone], references: [id])
-  timestampObject timestamp      @relation(fields: [timestamp], references: [id])
+  timestampObject timestamp?     @relation(fields: [timestamp], references: [id])
   attachments     attachments[]  @relation("machine_attachments")
   comments        comments[]     @relation("machine_data_comments")
 

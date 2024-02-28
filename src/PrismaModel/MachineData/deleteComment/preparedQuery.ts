@@ -12,11 +12,7 @@ const preparedQuery = (machineId:string,commentId:string) => {
                         id: commentId
                     },
                     data:{
-                        timestampObject:{
-                            delete:{
-                                id: commentId
-                            }
-                        }
+
                     }
                 },
                 delete:{
