@@ -15,6 +15,7 @@ import deleteComment from "../../../PrismaModel/MachineData/deleteComment";
 import createAttachment from "../../../PrismaModel/MachineData/createAttachment";
 import updateAttachment from "../../../PrismaModel/MachineData/updateAttachment";
 import deleteAttachment from "../../../PrismaModel/MachineData/deleteAttachment";
+import getUIFields from "../../../PrismaModel/MachineData/getUIFields";
 
 const machine_dataRouter=Express.Router({
     strict:true,
@@ -34,6 +35,7 @@ machine_dataRouter.get('/findModelNumber',  (new findModelNumber).stack)
 machine_dataRouter.get('/findDateOfMfg',    (new findDateOfMfg).stack)
 machine_dataRouter.get('/findName',         (new findName).stack)
 machine_dataRouter.get('/getAllComments',   (new getAllComments).stack)
+machine_dataRouter.get('/getUIFields',      (new getUIFields).stack)
 
 machine_dataRouter.put('/createComment',    (new createComment).stack)
 machine_dataRouter.put('/updateComment',    (new updateComment).stack)
