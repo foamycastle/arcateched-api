@@ -111,7 +111,7 @@ export abstract class MachineData extends PrismaModel{
     errorHandler(): (err: ArcatechedErrorInterface, request: extendedRequest, response: extendedResponse, next: NextFunction) => void {
         return (err: ArcatechedErrorInterface, request: extendedRequest, response: extendedResponse, next: NextFunction) => {
             console.log('Machine Data','errorHandler', err)
-            response.status(500).json(err)
+            response.status(err.httpCode).json(err.responseObject)
             next()
         }
     }

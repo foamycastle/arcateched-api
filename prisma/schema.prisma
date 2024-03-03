@@ -15,17 +15,17 @@ model attachments {
   type            attType?
   timestamp       String?                @db.Uuid
   timestampObject timestamp?             @relation(fields: [timestamp], references: [id])
-  machines        machine_data[]         @relation("machine_attachments")
   comments        comments[]             @relation("attachment_comments")
   contacts        contacts[]             @relation("contacts_attachments")
   issues          issues[]               @relation("issues_attachments")
-  machine_zones   machine_zones[]        @relation("machine_zone_attachments")
   keys            keys[]                 @relation("keys_attachments")
-  todo            todo[]                 @relation("todo_attachments")
-  users           users[]                @relation("user_attachments")
+  machines        machine_data[]         @relation("machine_attachments")
+  machine_zones   machine_zones[]        @relation("machine_zone_attachments")
   poItems         purchase_order_items[] @relation("poItems_attachments")
   purchase_orders purchase_orders[]      @relation("po_attachments")
   replaced_parts  replaced_parts[]       @relation("replaced_parts_attachments")
+  todo            todo[]                 @relation("todo_attachments")
+  users           users[]                @relation("user_attachments")
 }
 
 model comments {
@@ -33,34 +33,34 @@ model comments {
   timestamp       String                 @db.Uuid
   content         String?
   userRole        user_role?
-  machines        machine_data[]         @relation("machine_data_comments")
+  timestampObject timestamp              @relation(fields: [timestamp], references: [id])
   attachments     attachments[]          @relation("attachment_comments")
   contacts        contacts[]             @relation("contacts_comments")
   issues          issues[]               @relation("issues_comments")
   keys            keys[]                 @relation("keys_comments")
+  machines        machine_data[]         @relation("machine_data_comments")
   machine_zones   machine_zones[]        @relation("machine_zones_comments")
-  todo            todo[]                 @relation("todo_comments")
-  users           users[]                @relation("users_comments")
   poItems         purchase_order_items[] @relation("poItems_comments")
   purchase_orders purchase_orders[]      @relation("po_comments")
   replaced_parts  replaced_parts[]       @relation("replaced_parts_comments")
-  timestampObject timestamp              @relation(fields: [timestamp], references: [id])
+  todo            todo[]                 @relation("todo_comments")
+  users           users[]                @relation("users_comments")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model contacts {
   id              String               @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
   name            String               @db.VarChar(64)
-  addresses       contacts_addresses[]
-  phones          contacts_phone[]
-  interet         contacts_internet[]
   type            contactType[]
   supplies        String[]             @db.VarChar(64)
   timestamp       String?              @db.Uuid
   timestampObject timestamp?           @relation(fields: [timestamp], references: [id])
+  addresses       contacts_addresses[]
+  interet         contacts_internet[]
+  phones          contacts_phone[]
+  machines        machine_data[]
   attachments     attachments[]        @relation("contacts_attachments")
   comments        comments[]           @relation("contacts_comments")
-  machines        machine_data[]
 }
 
 model contacts_addresses {
@@ -115,10 +115,10 @@ model issues {
   postResult      String?
   timestamp       String                @db.Uuid
   tag             String?               @db.Uuid
+  timestampObject timestamp             @relation(fields: [timestamp], references: [id])
   issue_tags      issues_problem_tags[] @relation("issue_problem_tags")
   attachments     attachments[]         @relation("issues_attachments")
   comments        comments[]            @relation("issues_comments")
-  timestampObject timestamp             @relation(fields: [timestamp], references: [id])
 }
 
 model issues_problem_tags {
@@ -136,37 +136,48 @@ model keys {
   markings            String[]       @db.VarChar
   timestamp           String?        @db.Uuid
   timestampObject     timestamp?     @relation(fields: [timestamp], references: [id])
-  machine_service_key machine_data[] @relation("machine_service_keys")
   machine_cabinet_key machine_data[] @relation("machine_cabinet_keys")
-  comments            comments[]     @relation("keys_comments")
+  machine_service_key machine_data[] @relation("machine_service_keys")
   attachments         attachments[]  @relation("keys_attachments")
+  comments            comments[]     @relation("keys_comments")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model machine_data {
-  id              String         @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
-  name            String         @db.VarChar(64)
-  modelNumber     String?        @db.VarChar(32)
-  serialNumber    String         @unique(map: "gameSerial__u") @db.VarChar(32)
-  dateOfMfg       DateTime?      @db.Date
-  dateEnter       DateTime?      @db.Date
-  dateExit        DateTime?      @db.Date
-  cKey            String?        @map("cabinetKey") @db.Uuid
-  sKey            String?        @map("serviceKey") @db.Uuid
-  playerCount     Int?           @db.SmallInt
-  gameType        gameType[]
-  gameZone        String?        @db.Uuid
-  occupied        Float?
-  timestamp       String?        @db.Uuid
-  mfgUUID         String?        @db.Uuid
-  opState         opState?
-  manufacturer    contacts?      @relation(fields: [mfgUUID], references: [id])
-  serviceKey      keys?          @relation("machine_service_keys", fields: [sKey], references: [id])
-  cabinetKey      keys?          @relation("machine_cabinet_keys", fields: [cKey], references: [id])
-  zone            machine_zones? @relation(fields: [gameZone], references: [id])
-  timestampObject timestamp?     @relation(fields: [timestamp], references: [id])
-  attachments     attachments[]  @relation("machine_attachments")
-  comments        comments[]     @relation("machine_data_comments")
+  id               String         @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  name             String         @db.VarChar(64)
+  modelNumber      String?        @db.VarChar(32)
+  serialNumber     String         @unique(map: "gameSerial__u") @db.VarChar(32)
+  dateOfMfg        DateTime?      @db.Date
+  dateEnter        DateTime?      @db.Date
+  dateExit         DateTime?      @db.Date
+  cKey             String?        @map("cabinetKey") @db.Uuid
+  sKey             String?        @map("serviceKey") @db.Uuid
+  playerCount      Int?           @db.SmallInt
+  gameType         gameType[]
+  gameZone         String?        @db.Uuid
+  occupied         Float?
+  timestamp        String?        @db.Uuid
+  mfgUUID          String?        @db.Uuid
+  opState          opState?
+  intPS            Int?
+  currentDraw      Int?
+  optimalVoltage   Int?
+  phase            elecPhase?
+  powerConsumption Int?
+  coinmech         Boolean?
+  coinmechCount    Int?
+  dba              Boolean?
+  ticketMech       Boolean?
+  ticketMechType   ticketMech?
+  cardReader       Boolean?
+  cabinetKey       keys?          @relation("machine_cabinet_keys", fields: [cKey], references: [id])
+  zone             machine_zones? @relation(fields: [gameZone], references: [id])
+  manufacturer     contacts?      @relation(fields: [mfgUUID], references: [id])
+  serviceKey       keys?          @relation("machine_service_keys", fields: [sKey], references: [id])
+  timestampObject  timestamp?     @relation(fields: [timestamp], references: [id])
+  attachments      attachments[]  @relation("machine_attachments")
+  comments         comments[]     @relation("machine_data_comments")
 
   @@index([mfgUUID], map: "fki_manufacturerID")
   @@index([timestamp], map: "fki_timestamp")
@@ -178,10 +189,10 @@ model machine_zones {
   description     String?        @db.VarChar(255)
   floorArea       Float?
   timestamp       String         @db.Uuid
+  machine_data    machine_data[]
   timestampObject timestamp      @relation(fields: [timestamp], references: [id])
   attachments     attachments[]  @relation("machine_zone_attachments")
   comments        comments[]     @relation("machine_zones_comments")
-  machine_data    machine_data[]
 }
 
 model timestamp {
@@ -213,14 +224,14 @@ model timestamp {
   attachments     attachments[]
   comments        comments[]
   contacts        contacts[]
+  issues          issues[]
   keys            keys[]
   machines        machine_data[]
   zones           machine_zones[]
-  issues          issues[]
-  todo            todo[]
-  users           users[]
   purchase_orders purchase_orders[]
   replaced_parts  replaced_parts[]
+  todo            todo[]
+  users           users[]
 }
 
 model todo {
@@ -234,9 +245,9 @@ model todo {
   disposition     String?
   relatedMachine  String?       @db.Uuid
   relatedIssue    String?       @db.Uuid
-  attachments     attachments[] @relation("todo_attachments")
   timestamp       String        @db.Uuid
   timestampObject timestamp     @relation(fields: [timestamp], references: [id])
+  attachments     attachments[] @relation("todo_attachments")
   comments        comments[]    @relation("todo_comments")
 }
 
@@ -249,8 +260,8 @@ model users {
   userRole        user_role?
   userContact     String?       @db.Uuid
   timestamp       String?       @db.Uuid
-  attachments     attachments[] @relation("user_attachments")
   timestampObject timestamp?    @relation(fields: [timestamp], references: [id])
+  attachments     attachments[] @relation("user_attachments")
   comments        comments[]    @relation("users_comments")
 }
 
@@ -266,13 +277,13 @@ model purchase_order_items {
   relatedMachine String?         @db.Uuid
   relatedIssue   String?         @db.Uuid
   relatedTodo    String?         @db.Uuid
+  parent         purchase_orders @relation(fields: [po_id], references: [id])
   attachments    attachments[]   @relation("poItems_attachments")
   comments       comments[]      @relation("poItems_comments")
-  parent         purchase_orders @relation(fields: [po_id], references: [id])
 }
 
 model purchase_orders {
-  id                String                 @unique(map: "purchase_order_id") @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
+  id                String                 @id @unique(map: "purchase_order_id") @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
   number            String                 @db.VarChar(10)
   timestamp         String                 @db.Uuid
   recv              Boolean                @default(false)
@@ -283,12 +294,10 @@ model purchase_orders {
   salesTax          BigInt?
   shipping_carrier  String?                @db.Uuid
   carrier_tracking  String?                @db.VarChar(48)
+  items             purchase_order_items[]
   timestampObject   timestamp              @relation(fields: [timestamp], references: [id])
   attachments       attachments[]          @relation("po_attachments")
   comments          comments[]             @relation("po_comments")
-  items             purchase_order_items[]
-
-  @@id([id])
 }
 
 model replaced_parts {
@@ -299,8 +308,8 @@ model replaced_parts {
   relatedIssue    String?       @db.Uuid
   relatedTodo     String?       @db.Uuid
   timestamp       String        @db.Uuid
-  attachments     attachments[] @relation("replaced_parts_attachments")
   timestampObject timestamp     @relation(fields: [timestamp], references: [id])
+  attachments     attachments[] @relation("replaced_parts_attachments")
   comment         comments[]    @relation("replaced_parts_comments")
 }
 
@@ -617,4 +626,14 @@ enum user_role {
   SENIOR
   JUNIOR
   ATTENDANT
+}
+
+enum ticketMech {
+  DL1275 @map("DL-1275")
+}
+
+enum elecPhase {
+  SINGLE
+  DOUBLE
+  TRIPLE
 }

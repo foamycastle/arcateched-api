@@ -11,6 +11,7 @@ server.use(Express.json({
 }))
 
 
+
 server.use("/",(req,res,next)=>{
     console.log("Request: ",req.method, req.path)
     next()
