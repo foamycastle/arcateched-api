@@ -40,6 +40,9 @@ export abstract class PrismaModel implements ExpressRouterWare{
     protected prismaModel:any
     protected prismaOp:PrismaAPIQueryOp
     protected operationType:OperationType
+    protected opName:string
+
+
 
     constructor(){
         this.prismaClient = new PrismaClient()
@@ -73,5 +76,6 @@ export abstract class PrismaModel implements ExpressRouterWare{
         return returnThis
 
     }
+
 
 }
